@@ -1,0 +1,1 @@
+# thiagodnf.core
