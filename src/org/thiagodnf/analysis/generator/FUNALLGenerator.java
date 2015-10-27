@@ -1,7 +1,6 @@
 package org.thiagodnf.analysis.generator;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,17 +8,38 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import javax.swing.JFrame;
+
 import org.apache.commons.io.FilenameUtils;
+import org.thiagodnf.analysis.util.LoggerUtils;
+import org.thiagodnf.analysis.util.SolutionSetUtils;
 import org.thiagodnf.core.util.FilesUtils;
 
+import jmetal.core.SolutionSet;
+
+/**
+ * FUNALL Generator Class
+ * 
+ * @author Thiago Nascimento
+ * @since 2015-10-27
+ * @version 1.0.0
+ */
 public class FUNALLGenerator extends Generator {
 	
-	protected final static Logger logger = Logger.getLogger(FUNALLGenerator.class.getName());
+	protected final static Logger logger = LoggerUtils.getLogger(FUNALLGenerator.class.getName());
+	
+	protected int processedFile = 1;
+	
+	protected int totalOfFiles;
+	
+	public FUNALLGenerator(JFrame parent) {
+		super(parent);
+	}
 	
 	protected Void doInBackground() throws Exception {
 		
 		logger.info("==================================================================");
-		logger.info("Starting " + FUNALLGenerator.class.getSimpleName());
+		logger.info("Starting " + toString());
 		logger.info("==================================================================");
 		
 		showMessage("Counting files");
@@ -27,18 +47,23 @@ public class FUNALLGenerator extends Generator {
 		List<String> files = new ArrayList<String>();
 
 		for (File folder : folders) {
-			files.addAll(FilesUtils.getFiles(folder, "FUN_"));
+			files.addAll(FilesUtils.getFiles(folder, "FUN" + separator,"ALL"));
 		}
 		
-		hideMessage();
+		this.totalOfFiles = files.size();
 		
-		updateMaximum(files.size());
+		showMessage(totalOfFiles + " has been found");
+		
+		updateMaximum(totalOfFiles);
 		
 		Map<String,List<String>> map = new HashMap<String, List<String>>();
 		
-		int currentFile = 1;
+		logger.info("Sorting files");
+		
+		int sortedFiles = 1;
 
 		for (String filename : files) {
+			
 			String fullPath = FilenameUtils.getFullPath(filename);
 
 			if (!map.containsKey(fullPath)) {
@@ -47,87 +72,52 @@ public class FUNALLGenerator extends Generator {
 
 			map.get(fullPath).add(filename);
 
-			updateProgress(++currentFile + " from " + files.size());
+			updateProgress(sortedFiles++ + " from " + totalOfFiles);
 		}
+		
+		logger.info("Files were sorted");
 		
 		updateMaximum(files.size());
 		
 		for (Entry<String, List<String>> entry : map.entrySet()) {
-			generateFunAll(entry.getKey(), entry.getValue());
+			generate(entry.getKey(), entry.getValue());
 		}
-		
-		
-		System.out.println(map);
-		
-//		logger.info("Finding a known Pareto front file in the path");
-//		
-//		logger.info("Generating the FUN_ALL for all FUN files");
-//		
-//		for(File folder : folders){			
-//			
-//			List<String> files = FilesUtils.getFiles(folder, "FUN_");
-//			
-//			Map<String,List<String>> map = new HashMap<String, List<String>>();
-//			
-//			for (String filename : files) {
-//				String fullPath = FilenameUtils.getFullPath(filename);
-//	
-//				if (!map.containsKey(fullPath)) {
-//					map.put(fullPath, new ArrayList<String>());
-//				}
-//	
-//				map.get(fullPath).add(filename);
-//			}
-//			
-//			updateMaximum(map.size());
-//			
-//			for (Entry<String, List<String>> entry : map.entrySet()) {
-//				generateFunAll(entry.getKey(), entry.getValue());
-//			}
-//		}
-		
-		logger.info("Done");
 		
 		return null;
 	}
 	
-	protected void generateFunAll(String folder, List<String> files) throws IOException{
-		
+	protected void generate(String folder, List<String> files) throws Exception {
+
 		logger.info("Generating FUNALL for folder: " + folder);
-//		
-//		SolutionSet all = new SolutionSet(Integer.MAX_VALUE);
-//		
-//		for(String file : files){
-//			
-//			logger.info("Reading the fun file: " + file);
-//			
-//			SolutionSet population = SolutionSetUtils.getFromFile(file, numberOfObjectives);
-//			
-//			logger.info(population.size() + " solutions have been found");
-//			
-//			all = all.union(population);
-//		}
-//		
-//		logger.info(all.size() + " found solutions");
-//		
-//		logger.info("Removing repeated solutions");
-//		
-//		all = SolutionSetUtils.removeRepeatedSolutions(all);
-//		
-//		logger.info("After remove repeated solutions, the Solution Set contains " + all.size() + " solutions");
-//		
-//		logger.info("Removing dominated solutions");
-//		
-//		all = SolutionSetUtils.removeDominatedSolutions(all);
-//		
-//		logger.info(all.size() + " solutions are in known Pareto front");
-//		
-//		logger.info("Saving known Pareto front in a file");
-//
-//		all.printObjectivesToFile(fullPath + "/FUNALL");
-//		
-//		updateProgress("Processing files", ++progress);
-	}	
+
+		SolutionSet funAll = new SolutionSet(Integer.MAX_VALUE);
+
+		for (String file : files) {
+			logger.info("Reading the fun file: " + file);
+
+			SolutionSet population = SolutionSetUtils.getFromFile(file);
+			
+			logger.info(population.size() + " found solutions. Joining all solutions");
+					
+			funAll = funAll.union(population);
+			
+			logger.info(funAll.size() + " found solutions. Removing repeated solutions");
+			
+			funAll = SolutionSetUtils.removeRepeatedSolutions(funAll);
+
+			logger.info(funAll.size() + " found solutions. Removing dominated solutions");
+
+			funAll = SolutionSetUtils.removeDominatedSolutions(funAll);
+			
+			logger.info(funAll.size() + " found solutions.");
+			
+			updateProgress(processedFile++ + " from " + totalOfFiles);
+		}
+		
+		logger.info(funAll.size() + " found solutions. Saving the FUNALL file");
+		
+		funAll.printObjectivesToFile(folder + "/FUNALL");
+	}
 	
 	public String toString() {
 		return "FUNALL Generator";

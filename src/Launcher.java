@@ -1,8 +1,11 @@
+import java.util.logging.Logger;
+
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
+import org.thiagodnf.analysis.util.LoggerUtils;
 
 /**
  * Main Class
@@ -14,6 +17,8 @@ import org.thiagodnf.analysis.gui.window.MainWindow;
 public class Launcher {
 
 	public static void main(String[] args) throws Exception {
+		Logger logger = LoggerUtils.getLogger(Launcher.class.getName());
+		
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -24,7 +29,9 @@ public class Launcher {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
+	
+		logger.info("Starting...");
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				// Here, we can safely update the GUI

@@ -14,14 +14,15 @@ import javax.swing.SwingConstants;
 
 import org.thiagodnf.analysis.generator.FUNALLGenerator;
 import org.thiagodnf.analysis.generator.Generator;
+import org.thiagodnf.analysis.generator.PFKnownGenerator;
 
 public class ChooseGeneratorsWindow extends JPanel{
 
 	private static final long serialVersionUID = -2819220375520561750L;
 	
-	protected JFrame frame;
+	protected JFrame parent;
 	
-	protected JCheckBox pfkCheckBox;
+	protected JCheckBox runPFknownGeneratorCheckBox;
 	
 	protected JCheckBox runFunAllGeneratorCheckBox;
 	
@@ -29,24 +30,23 @@ public class ChooseGeneratorsWindow extends JPanel{
 	
 	protected JCheckBox statisticalIndicatorsCheckBox;
 	
-	public ChooseGeneratorsWindow(JFrame frame){
-		this.frame = frame;
+	public ChooseGeneratorsWindow(JFrame parent){
+		this.parent = parent;
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		this.pfkCheckBox = getNewJCheckBox("Known Pareto Front");
+		this.runPFknownGeneratorCheckBox = getNewJCheckBox("Known Pareto Front");
 		this.qualityIndicatorsCheckBox = getNewJCheckBox("Quality Indicators");
 		this.statisticalIndicatorsCheckBox = getNewJCheckBox("Statistical Indicators");
 		this.runFunAllGeneratorCheckBox = getNewJCheckBox("FUNALL Files");
 		
 		add(runFunAllGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
+		add(runPFknownGeneratorCheckBox);
+		add(Box.createVerticalStrut(10));
 		add(qualityIndicatorsCheckBox);
 		add(Box.createVerticalStrut(10));
-		add(statisticalIndicatorsCheckBox);		
-		add(Box.createVerticalStrut(10));
-		add(pfkCheckBox);
-		
+		add(statisticalIndicatorsCheckBox);
 	}
 	
 	protected JCheckBox getNewJCheckBox(String name) {
@@ -58,7 +58,7 @@ public class ChooseGeneratorsWindow extends JPanel{
 	public int showOptionDialog(){
 		Object[] options = { "Run", "Cancel"};
 		
-		return JOptionPane.showOptionDialog(frame, this, "Choose the generators",
+		return JOptionPane.showOptionDialog(parent, this, "Choose the generators",
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, options, null);
 	}
@@ -76,7 +76,10 @@ public class ChooseGeneratorsWindow extends JPanel{
 //			generators.add(new StatsGenerator(frame, numberOfObjectives, folders));
 //		}
 		if (this.runFunAllGeneratorCheckBox.isSelected()) {
-			generators.add(new FUNALLGenerator());
+			generators.add(new FUNALLGenerator(parent));
+		}
+		if (this.runPFknownGeneratorCheckBox.isSelected()) {
+			generators.add(new PFKnownGenerator(parent));
 		}
 		
 		return generators;

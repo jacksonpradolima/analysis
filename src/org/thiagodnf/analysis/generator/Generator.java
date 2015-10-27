@@ -1,17 +1,20 @@
 package org.thiagodnf.analysis.generator;
 
 import java.io.File;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
-import com.google.common.base.Preconditions;
+
+import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.util.LoggerUtils;
 
 @SuppressWarnings("rawtypes")
 public abstract class Generator extends SwingWorker {
 	
-	protected final static Logger logger = Logger.getLogger(Generator.class.getName());
+	protected final static Logger logger = LoggerUtils.getLogger(Generator.class.getName());
 	
 	protected ProgressMonitor monitor;
 	
@@ -19,9 +22,18 @@ public abstract class Generator extends SwingWorker {
 	
 	protected File[] folders;
 	
-	public void run(JFrame parent, File[] folders, int numberOfObjectives) {
-		Preconditions.checkArgument(numberOfObjectives > 0, "Number of Objectives cannot be less than zero");
-
+	protected String separator;
+	
+	protected List<Generator> generators;
+	
+	protected JFrame parent;
+	
+	public Generator(JFrame parent) {
+		this.separator = "_";
+		this.parent = parent;
+	}
+	
+	public void run(JFrame parent, File[] folders) {
 		this.folders = folders;
 		
 		monitor = new ProgressMonitor(parent, "Running " + this, "...", 0, 10);
@@ -58,8 +70,12 @@ public abstract class Generator extends SwingWorker {
 		updateNote(note);
 	}
 	
-	public void showMessage(String note){
-		updateMaximum(10000);
+	public void showMessage(String note) {
+		showMessage(note, 10000);
+	}
+
+	public void showMessage(String note, int maximum) {
+		updateMaximum(maximum);
 		updateProgress(note);
 	}
 	
@@ -76,4 +92,31 @@ public abstract class Generator extends SwingWorker {
 			throw new IllegalArgumentException("Canceled");
 		}
 	}
+	
+	@Override
+	protected void done() {
+		if (generators.isEmpty()) {
+			MessageBoxWindow.info(parent,"Done");
+		}else{
+			Generator generator = generators.remove(0);
+			
+			generator.setGenerators(generators);
+			
+			generator.run(parent, folders);
+		}		
+	}
+	
+	public String getSeparator() {
+		return separator;
+	}
+
+	public void setSeparator(String separator) {
+		this.separator = separator;
+	}
+	
+	public void setGenerators(List<Generator> generators) {
+		this.generators = generators;		
+	}
+	
+	public abstract String toString();
 }

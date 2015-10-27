@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.thiagodnf.analysis.generator.Generator;
 import org.thiagodnf.analysis.gui.window.ChooseGeneratorsWindow;
+import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 
 public class RunGeneratorsAction extends AbstractAction {
 
@@ -22,23 +23,10 @@ public class RunGeneratorsAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		ChooseGeneratorsWindow window = new ChooseGeneratorsWindow(parent);
-		
-		if (window.showOptionDialog() == JOptionPane.YES_OPTION) {
+		try{
+			ChooseGeneratorsWindow window = new ChooseGeneratorsWindow(parent);
 			
-			final JFileChooser fc = new JFileChooser();
-
-			fc.setCurrentDirectory(new File("."));
-			
-			fc.setMultiSelectionEnabled(true);
-			
-			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			
-			if (fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
-				
-				final File[] folders = fc.getSelectedFiles();
-				
-				int nObjectives = 3;
+			if (window.showOptionDialog() == JOptionPane.YES_OPTION) {
 				
 				List<Generator> generators = window.getSelectedGenerators();
 				
@@ -46,10 +34,28 @@ public class RunGeneratorsAction extends AbstractAction {
 					throw new IllegalArgumentException("You must to select at least one generator");
 				}
 				
-				for (Generator generator : generators) {
-					generator.run(parent, folders, nObjectives);
+				final JFileChooser fc = new JFileChooser();
+	
+				fc.setCurrentDirectory(new File("."));
+				
+				fc.setMultiSelectionEnabled(true);
+				
+				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				
+				if (fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
+					
+					final File[] folders = fc.getSelectedFiles();
+					
+					Generator generator = generators.remove(0);
+					
+					generator.setGenerators(generators);
+					
+					generator.run(parent, folders);
 				}
 			}
+		} catch (Exception ex) {
+			MessageBoxWindow.info(parent, ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 }
