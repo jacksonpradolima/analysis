@@ -9,6 +9,8 @@ import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
 
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.task.AsyncTask;
+import org.thiagodnf.analysis.task.LoadFilesThatStartingWithTask;
 import org.thiagodnf.analysis.util.LoggerUtils;
 
 @SuppressWarnings("rawtypes")
@@ -24,7 +26,7 @@ public abstract class GeneratorWorker extends SwingWorker{
 	
 	protected File[] folders;
 	
-	protected List<AbstractGenerator> generators;
+	protected List<Generator> generators;
 	
 	public GeneratorWorker(JFrame parent) {
 		this.parent = parent;
@@ -85,15 +87,15 @@ public abstract class GeneratorWorker extends SwingWorker{
 		if (generators.isEmpty()) {
 			MessageBoxWindow.info(parent, "Done");
 		} else {
-			AbstractGenerator generator = generators.remove(0);
+			Generator generator = generators.remove(0);
 
-			generator.setGenerators(generators);
-
-			generator.run(folders);
+//			generator.setGenerators(generators);
+//
+//			generator.run(folders);
 		}		
 	}
 		
-	public void setGenerators(List<AbstractGenerator> generators) {
+	public void setGenerators(List<Generator> generators) {
 		this.generators = generators;		
 	}
 	
@@ -108,7 +110,8 @@ public abstract class GeneratorWorker extends SwingWorker{
 		logger.info("Starting " + toString());
 		logger.info("==================================================================");
 		
-		execute();		
+		
+		//execute();		
 	}
 	
 }

@@ -62,6 +62,10 @@ public class SolutionSetUtils {
 	}
 	
 	public static SolutionSet removeDominatedSolutions(SolutionSet population) {
+		if (population.size() == 0) {
+			return population;
+		}
+
 		Ranking ranking = new Ranking(population);
 		return ranking.getSubfront(0);
 	}

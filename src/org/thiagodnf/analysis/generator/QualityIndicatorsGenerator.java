@@ -15,9 +15,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.thiagodnf.analysis.util.LoggerUtils;
 import org.thiagodnf.analysis.util.SolutionSetUtils;
-import org.thiagodnf.core.util.FilesUtils;
-
-import com.sun.jndi.toolkit.dir.HierMemDirCtx;
 
 import jmetal.core.Problem;
 import jmetal.core.Solution;
@@ -26,27 +23,27 @@ import jmetal.encodings.solutionType.BinarySolutionType;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
 
-public class QualityIndicatorsGenerator extends AbstractGenerator {
+public class QualityIndicatorsGenerator extends Generator {
 	
 	protected final static Logger logger = LoggerUtils.getLogger(QualityIndicatorsGenerator.class.getName());
 	
-	public QualityIndicatorsGenerator(JFrame frame) {
-		super(frame);
+	public QualityIndicatorsGenerator(JFrame frame, File[] folders) {
+		super(frame, folders);
 	}
 	
 	protected Void doInBackground() throws Exception {
 		
-		showMessage("Counting files");
+//		showMessage("Counting files");
 		
 		List<String> files = new ArrayList<String>();
 
-		for (File folder : folders) {
-			files.addAll(FilesUtils.getFiles(folder, "FUN_","ALL"));
-		}
+//		for (File folder : folders) {
+//			files.addAll(FilesUtils.getFiles(folder, "FUN_","ALL"));
+//		}
 		
-		this.totalOfFiles = files.size();
-		
-		logger.info(totalOfFiles + " has been found");
+//		this.totalOfFiles = files.size();
+//		
+//		logger.info(totalOfFiles + " has been found");
 		
 		logger.info("Sorting files");
 		
@@ -65,7 +62,7 @@ public class QualityIndicatorsGenerator extends AbstractGenerator {
 		
 		logger.info("Files were sorted");
 
-		updateMaximum(totalOfFiles);
+//		updateMaximum(totalOfFiles);
 
 		for (Entry<String, List<String>> entry : map.entrySet()) {
 			generate(entry.getKey(), entry.getValue());
@@ -73,7 +70,7 @@ public class QualityIndicatorsGenerator extends AbstractGenerator {
 		
 		logger.info("Done");
 		
-		hideMessage();
+		
 		
 		return null;
 	}
@@ -104,7 +101,7 @@ public class QualityIndicatorsGenerator extends AbstractGenerator {
 		for(String file : files){
 			generateQualityIndicators(qi, file);
 			
-			updateProgress(processedFile++ + " from " + totalOfFiles);
+//			updateProgress(processedFile++ + " from " + totalOfFiles);
 		}
 	}
 		
@@ -179,8 +176,7 @@ public class QualityIndicatorsGenerator extends AbstractGenerator {
 	
 	@Override
 	public String toString() {
-		return "Quality Indicators Generator";
-	}
-	
+		return "Running Quality Indicators Generator";
+	}	
 }
 

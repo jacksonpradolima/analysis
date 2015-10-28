@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 
 import org.apache.commons.io.FilenameUtils;
 import org.thiagodnf.analysis.util.LoggerUtils;
-import org.thiagodnf.core.util.FilesUtils;
 
 /**
  * FUNALL Generator Class
@@ -21,50 +20,45 @@ import org.thiagodnf.core.util.FilesUtils;
  * @since 2015-10-27
  * @version 1.0.0
  */
-public class FUNALLGenerator extends AbstractGenerator {
+public class FUNALLGenerator extends ParetoFrontGenerator {
 	
 	protected final static Logger logger = LoggerUtils.getLogger(FUNALLGenerator.class.getName());
 	
-	public FUNALLGenerator(JFrame parent) {
-		super(parent);
+	public FUNALLGenerator(JFrame parent, File[] folders) {
+		super(parent, folders);
 	}
 	
 	protected Void doInBackground() throws Exception {
 		
-		showMessage("Counting files");
-		
-		List<String> files = new ArrayList<String>();
+		List<String> files = getFilesStartingWith(folders, "FUN_", "ALL");
 
-		for (File folder : folders) {
-			files.addAll(FilesUtils.getFiles(folder, "FUN_","ALL"));
-		}
-		
-		this.totalOfFiles = files.size();
-		
-		logger.info(totalOfFiles + " has been found");
-		
-		logger.info("Sorting files");
-		
-		Map<String,List<String>> map = new HashMap<String, List<String>>();		
-		
+		logger.info(files.size() + " has been found");
+
+		updateMaximum(files.size());
+
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+
 		for (String filename : files) {
-			
+			updateNote("Sorting files " + getCurrentProgress() + " from " + files.size());
+
 			String fullPath = FilenameUtils.getFullPath(filename);
 
 			if (!map.containsKey(fullPath)) {
 				map.put(fullPath, new ArrayList<String>());
 			}
 
-			map.get(fullPath).add(filename);			
+			map.get(fullPath).add(filename);
+
+			updateProgress();
 		}
 		
-		logger.info("Files were sorted");
-
-		updateMaximum(totalOfFiles);
-
+		updateMaximum(files.size());
+		
 		for (Entry<String, List<String>> entry : map.entrySet()) {
-			generate(entry.getKey(), entry.getValue(), "/FUNALL");
+			generate(entry.getKey(), entry.getValue(), "/FUNALL", files.size());
 		}
+		
+		afterFinishing();
 		
 		logger.info("Done");
 		
@@ -73,7 +67,7 @@ public class FUNALLGenerator extends AbstractGenerator {
 	
 	@Override
 	public String toString() {
-		return "FUNALL Generator";
+		return "Running FUNALL Generator";
 	}
 }
 

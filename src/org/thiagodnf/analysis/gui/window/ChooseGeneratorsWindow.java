@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.thiagodnf.analysis.generator.AbstractGenerator;
 import org.thiagodnf.analysis.generator.ApproximateTrueParetoFrontGenerator;
 import org.thiagodnf.analysis.generator.FUNALLGenerator;
 import org.thiagodnf.analysis.generator.KnownParetoFrontGenerator;
@@ -71,27 +70,22 @@ public class ChooseGeneratorsWindow extends JPanel{
 		return JOptionPane.showOptionDialog(parent, this, title, optionType, messageType, null, options, null);
 	}
 	
-	public List<AbstractGenerator> getSelectedGenerators(){
-		List<AbstractGenerator> generators = new ArrayList<AbstractGenerator>();
-		
-//		
-//		if (this.statisticalIndicatorsCheckBox.isSelected()) {
-//			generators.add(new StatsGenerator(frame, numberOfObjectives, folders));
-//		}
+	public List<String> getSelectedGenerators() {
+		List<String> generators = new ArrayList<String>();
+
 		if (this.runFunAllGeneratorCheckBox.isSelected()) {
-			generators.add(new FUNALLGenerator(parent));
+			generators.add(FUNALLGenerator.class.getSimpleName());
 		}
 		if (this.runKnownParetoFrontGeneratorCheckBox.isSelected()) {
-			generators.add(new KnownParetoFrontGenerator(parent));
+			generators.add(KnownParetoFrontGenerator.class.getSimpleName());
 		}
 		if (this.runApproximateTrueParetoFrontGeneratorCheckBox.isSelected()) {
-			generators.add(new ApproximateTrueParetoFrontGenerator(parent));
+			generators.add(ApproximateTrueParetoFrontGenerator.class.getSimpleName());
 		}
 		if (this.runQualityIndicatorsCheckBox.isSelected()) {
-			generators.add(new QualityIndicatorsGenerator(parent));
+			generators.add(QualityIndicatorsGenerator.class.getSimpleName());
 		}
-		
+
 		return generators;
-	}
-	
+	}	
 }
