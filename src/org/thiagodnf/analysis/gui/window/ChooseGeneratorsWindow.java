@@ -1,6 +1,5 @@
 package org.thiagodnf.analysis.gui.window;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +11,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import org.thiagodnf.analysis.generator.ApproximateTrueParetoFrontGenerator;
 import org.thiagodnf.analysis.generator.FUNALLGenerator;
-import org.thiagodnf.analysis.generator.Generator;
-import org.thiagodnf.analysis.generator.PFKnownGenerator;
+import org.thiagodnf.analysis.generator.AbstractGenerator;
+import org.thiagodnf.analysis.generator.KnownParetoFrontGenerator;
 
 public class ChooseGeneratorsWindow extends JPanel{
 
@@ -22,7 +22,9 @@ public class ChooseGeneratorsWindow extends JPanel{
 	
 	protected JFrame parent;
 	
-	protected JCheckBox runPFknownGeneratorCheckBox;
+	protected JCheckBox runKnownParetoFrontGeneratorCheckBox;
+	
+	protected JCheckBox runApproximateTrueParetoFrontGeneratorCheckBox;
 	
 	protected JCheckBox runFunAllGeneratorCheckBox;
 	
@@ -35,14 +37,17 @@ public class ChooseGeneratorsWindow extends JPanel{
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		this.runPFknownGeneratorCheckBox = getNewJCheckBox("Known Pareto Front");
+		this.runFunAllGeneratorCheckBox = getNewJCheckBox("FUNALL Files");
+		this.runKnownParetoFrontGeneratorCheckBox = getNewJCheckBox("Known Pareto-front");
+		this.runApproximateTrueParetoFrontGeneratorCheckBox = getNewJCheckBox("Approximate True Pareto-front");
 		this.qualityIndicatorsCheckBox = getNewJCheckBox("Quality Indicators");
 		this.statisticalIndicatorsCheckBox = getNewJCheckBox("Statistical Indicators");
-		this.runFunAllGeneratorCheckBox = getNewJCheckBox("FUNALL Files");
 		
 		add(runFunAllGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
-		add(runPFknownGeneratorCheckBox);
+		add(runKnownParetoFrontGeneratorCheckBox);
+		add(Box.createVerticalStrut(10));
+		add(runApproximateTrueParetoFrontGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
 		add(qualityIndicatorsCheckBox);
 		add(Box.createVerticalStrut(10));
@@ -56,19 +61,18 @@ public class ChooseGeneratorsWindow extends JPanel{
 	}
 	
 	public int showOptionDialog(){
-		Object[] options = { "Run", "Cancel"};
-		
-		return JOptionPane.showOptionDialog(parent, this, "Choose the generators",
-                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
-                null, options, null);
+		Object[] options = { "Run", "Cancel" };
+
+		String title = "Choose the generators";
+		int optionType = JOptionPane.YES_NO_CANCEL_OPTION;
+		int messageType = JOptionPane.PLAIN_MESSAGE;
+
+		return JOptionPane.showOptionDialog(parent, this, title, optionType, messageType, null, options, null);
 	}
 	
-	public List<Generator> getSelectedGenerators(){
-		List<Generator> generators = new ArrayList<Generator>();
+	public List<AbstractGenerator> getSelectedGenerators(){
+		List<AbstractGenerator> generators = new ArrayList<AbstractGenerator>();
 		
-//		if (this.pfkCheckBox.isSelected()) {
-//			generators.add(new PFKnownGenerator(frame, numberOfObjectives, folders));
-//		}
 //		if (this.qualityIndicatorsCheckBox.isSelected()) {
 //			generators.add(new QualityIndicatorsGenerator(frame, numberOfObjectives, folders));
 //		}
@@ -78,8 +82,11 @@ public class ChooseGeneratorsWindow extends JPanel{
 		if (this.runFunAllGeneratorCheckBox.isSelected()) {
 			generators.add(new FUNALLGenerator(parent));
 		}
-		if (this.runPFknownGeneratorCheckBox.isSelected()) {
-			generators.add(new PFKnownGenerator(parent));
+		if (this.runKnownParetoFrontGeneratorCheckBox.isSelected()) {
+			generators.add(new KnownParetoFrontGenerator(parent));
+		}
+		if (this.runApproximateTrueParetoFrontGeneratorCheckBox.isSelected()) {
+			generators.add(new ApproximateTrueParetoFrontGenerator(parent));
 		}
 		
 		return generators;

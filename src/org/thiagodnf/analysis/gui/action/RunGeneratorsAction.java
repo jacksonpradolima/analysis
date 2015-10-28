@@ -7,7 +7,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import org.thiagodnf.analysis.generator.Generator;
+import org.thiagodnf.analysis.generator.AbstractGenerator;
 import org.thiagodnf.analysis.gui.window.ChooseGeneratorsWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 
@@ -28,7 +28,7 @@ public class RunGeneratorsAction extends AbstractAction {
 			
 			if (window.showOptionDialog() == JOptionPane.YES_OPTION) {
 				
-				List<Generator> generators = window.getSelectedGenerators();
+				List<AbstractGenerator> generators = window.getSelectedGenerators();
 				
 				if (generators.isEmpty()) {
 					throw new IllegalArgumentException("You must to select at least one generator");
@@ -46,11 +46,11 @@ public class RunGeneratorsAction extends AbstractAction {
 					
 					final File[] folders = fc.getSelectedFiles();
 					
-					Generator generator = generators.remove(0);
+					AbstractGenerator generator = generators.remove(0);
 					
 					generator.setGenerators(generators);
 					
-					generator.run(parent, folders);
+					generator.run(folders);
 				}
 			}
 		} catch (Exception ex) {

@@ -12,35 +12,25 @@ import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 import org.thiagodnf.analysis.util.LoggerUtils;
 
 @SuppressWarnings("rawtypes")
-public abstract class Generator extends SwingWorker {
-	
-	protected final static Logger logger = LoggerUtils.getLogger(Generator.class.getName());
+public abstract class GeneratorWorker extends SwingWorker{
+
+	protected final static Logger logger = LoggerUtils.getLogger(GeneratorWorker.class.getName());
 	
 	protected ProgressMonitor monitor;
 	
 	protected int progress;
 	
-	protected File[] folders;
-	
 	protected String separator;
-	
-	protected List<Generator> generators;
 	
 	protected JFrame parent;
 	
-	public Generator(JFrame parent) {
+	protected File[] folders;
+	
+	protected List<AbstractGenerator> generators;
+	
+	public GeneratorWorker(JFrame parent) {
 		this.separator = "_";
 		this.parent = parent;
-	}
-	
-	public void run(JFrame parent, File[] folders) {
-		this.folders = folders;
-		
-		monitor = new ProgressMonitor(parent, "Running " + this, "...", 0, 10);
-		monitor.setMillisToDecideToPopup(0);
-		monitor.setMillisToPopup(0);
-		
-		execute();		
 	}
 	
 	public void updateMaximum(int maximum) {
@@ -96,14 +86,14 @@ public abstract class Generator extends SwingWorker {
 	@Override
 	protected void done() {
 		if (generators.isEmpty()) {
-			MessageBoxWindow.info(parent,"Done");
-		}else{
-			Generator generator = generators.remove(0);
-			
+			MessageBoxWindow.info(parent, "Done");
+		} else {
+			AbstractGenerator generator = generators.remove(0);
+
 			generator.setGenerators(generators);
-			
-			generator.run(parent, folders);
-		}		
+
+			generator.run(folders);
+		}
 	}
 	
 	public String getSeparator() {
@@ -114,9 +104,22 @@ public abstract class Generator extends SwingWorker {
 		this.separator = separator;
 	}
 	
-	public void setGenerators(List<Generator> generators) {
+	public void setGenerators(List<AbstractGenerator> generators) {
 		this.generators = generators;		
 	}
 	
-	public abstract String toString();
+	public void run(File[] folders) {
+		this.folders = folders;
+		
+		monitor = new ProgressMonitor(parent, "Running " + this, "...", 0, 10);
+		monitor.setMillisToDecideToPopup(0);
+		monitor.setMillisToPopup(0);
+		
+		logger.info("==================================================================");
+		logger.info("Starting " + toString());
+		logger.info("==================================================================");
+		
+		execute();		
+	}
+	
 }

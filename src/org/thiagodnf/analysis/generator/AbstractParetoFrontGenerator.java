@@ -15,17 +15,17 @@ import org.thiagodnf.analysis.util.LoggerUtils;
 import org.thiagodnf.core.util.FilesUtils;
 
 /**
- * FUNALL Generator Class
+ * PFKnown Generator Class
  * 
  * @author Thiago Nascimento
  * @since 2015-10-27
  * @version 1.0.0
  */
-public class FUNALLGenerator extends AbstractGenerator {
+public abstract class AbstractParetoFrontGenerator extends AbstractGenerator {
 	
-	protected final static Logger logger = LoggerUtils.getLogger(FUNALLGenerator.class.getName());
+	protected final static Logger logger = LoggerUtils.getLogger(AbstractParetoFrontGenerator.class.getName());
 	
-	public FUNALLGenerator(JFrame parent) {
+	public AbstractParetoFrontGenerator(JFrame parent) {
 		super(parent);
 	}
 	
@@ -36,42 +36,47 @@ public class FUNALLGenerator extends AbstractGenerator {
 		List<String> files = new ArrayList<String>();
 
 		for (File folder : folders) {
-			files.addAll(FilesUtils.getFiles(folder, "FUN" + separator,"ALL"));
+			files.addAll(FilesUtils.getFiles(folder, getFilename()));
 		}
 		
 		this.totalOfFiles = files.size();
+
+		logger.info(totalOfFiles + " has been found");
 		
-		showMessage(totalOfFiles + " has been found");
+		updateMaximum(totalOfFiles);
 		
 		Map<String,List<String>> map = new HashMap<String, List<String>>();
 		
 		logger.info("Sorting files");
 		
 		for (String filename : files) {
-			
+
 			String fullPath = FilenameUtils.getFullPath(filename);
 
-			if (!map.containsKey(fullPath)) {
-				map.put(fullPath, new ArrayList<String>());
+			String parent = new File(fullPath).getParentFile().getAbsolutePath();
+
+			if (!map.containsKey(parent)) {
+				map.put(parent, new ArrayList<String>());
 			}
 
-			map.get(fullPath).add(filename);			
+			map.get(parent).add(filename);
 		}
 		
 		logger.info("Files were sorted");
-
-		updateMaximum(totalOfFiles);
-
+		
+		updateMaximum(files.size());
+		
 		for (Entry<String, List<String>> entry : map.entrySet()) {
-			generate(entry.getKey(), entry.getValue(), "/FUNALL");
+			generate(entry.getKey(), entry.getValue(), getOutputFilename());
 		}
+		
+		logger.info("Done");
 		
 		return null;
 	}
 	
-	@Override
-	public String toString() {
-		return "FUNALL Generator";
-	}
+	public abstract String getFilename();
+	
+	public abstract String getOutputFilename();
 }
 
