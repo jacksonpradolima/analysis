@@ -11,10 +11,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import org.thiagodnf.analysis.generator.AbstractGenerator;
 import org.thiagodnf.analysis.generator.ApproximateTrueParetoFrontGenerator;
 import org.thiagodnf.analysis.generator.FUNALLGenerator;
-import org.thiagodnf.analysis.generator.AbstractGenerator;
 import org.thiagodnf.analysis.generator.KnownParetoFrontGenerator;
+import org.thiagodnf.analysis.generator.QualityIndicatorsGenerator;
 
 public class ChooseGeneratorsWindow extends JPanel{
 
@@ -28,7 +29,7 @@ public class ChooseGeneratorsWindow extends JPanel{
 	
 	protected JCheckBox runFunAllGeneratorCheckBox;
 	
-	protected JCheckBox qualityIndicatorsCheckBox;
+	protected JCheckBox runQualityIndicatorsCheckBox;
 	
 	protected JCheckBox statisticalIndicatorsCheckBox;
 	
@@ -40,7 +41,7 @@ public class ChooseGeneratorsWindow extends JPanel{
 		this.runFunAllGeneratorCheckBox = getNewJCheckBox("FUNALL Files");
 		this.runKnownParetoFrontGeneratorCheckBox = getNewJCheckBox("Known Pareto-front");
 		this.runApproximateTrueParetoFrontGeneratorCheckBox = getNewJCheckBox("Approximate True Pareto-front");
-		this.qualityIndicatorsCheckBox = getNewJCheckBox("Quality Indicators");
+		this.runQualityIndicatorsCheckBox = getNewJCheckBox("Quality Indicators");
 		this.statisticalIndicatorsCheckBox = getNewJCheckBox("Statistical Indicators");
 		
 		add(runFunAllGeneratorCheckBox);
@@ -49,7 +50,7 @@ public class ChooseGeneratorsWindow extends JPanel{
 		add(Box.createVerticalStrut(10));
 		add(runApproximateTrueParetoFrontGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
-		add(qualityIndicatorsCheckBox);
+		add(runQualityIndicatorsCheckBox);
 		add(Box.createVerticalStrut(10));
 		add(statisticalIndicatorsCheckBox);
 	}
@@ -73,9 +74,7 @@ public class ChooseGeneratorsWindow extends JPanel{
 	public List<AbstractGenerator> getSelectedGenerators(){
 		List<AbstractGenerator> generators = new ArrayList<AbstractGenerator>();
 		
-//		if (this.qualityIndicatorsCheckBox.isSelected()) {
-//			generators.add(new QualityIndicatorsGenerator(frame, numberOfObjectives, folders));
-//		}
+//		
 //		if (this.statisticalIndicatorsCheckBox.isSelected()) {
 //			generators.add(new StatsGenerator(frame, numberOfObjectives, folders));
 //		}
@@ -87,6 +86,9 @@ public class ChooseGeneratorsWindow extends JPanel{
 		}
 		if (this.runApproximateTrueParetoFrontGeneratorCheckBox.isSelected()) {
 			generators.add(new ApproximateTrueParetoFrontGenerator(parent));
+		}
+		if (this.runQualityIndicatorsCheckBox.isSelected()) {
+			generators.add(new QualityIndicatorsGenerator(parent));
 		}
 		
 		return generators;

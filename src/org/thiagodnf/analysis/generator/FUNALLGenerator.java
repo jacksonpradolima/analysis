@@ -36,16 +36,16 @@ public class FUNALLGenerator extends AbstractGenerator {
 		List<String> files = new ArrayList<String>();
 
 		for (File folder : folders) {
-			files.addAll(FilesUtils.getFiles(folder, "FUN" + separator,"ALL"));
+			files.addAll(FilesUtils.getFiles(folder, "FUN_","ALL"));
 		}
 		
 		this.totalOfFiles = files.size();
 		
-		showMessage(totalOfFiles + " has been found");
-		
-		Map<String,List<String>> map = new HashMap<String, List<String>>();
+		logger.info(totalOfFiles + " has been found");
 		
 		logger.info("Sorting files");
+		
+		Map<String,List<String>> map = new HashMap<String, List<String>>();		
 		
 		for (String filename : files) {
 			
@@ -65,6 +65,8 @@ public class FUNALLGenerator extends AbstractGenerator {
 		for (Entry<String, List<String>> entry : map.entrySet()) {
 			generate(entry.getKey(), entry.getValue(), "/FUNALL");
 		}
+		
+		logger.info("Done");
 		
 		return null;
 	}

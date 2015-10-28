@@ -20,8 +20,6 @@ public abstract class GeneratorWorker extends SwingWorker{
 	
 	protected int progress;
 	
-	protected String separator;
-	
 	protected JFrame parent;
 	
 	protected File[] folders;
@@ -29,7 +27,6 @@ public abstract class GeneratorWorker extends SwingWorker{
 	protected List<AbstractGenerator> generators;
 	
 	public GeneratorWorker(JFrame parent) {
-		this.separator = "_";
 		this.parent = parent;
 	}
 	
@@ -93,17 +90,9 @@ public abstract class GeneratorWorker extends SwingWorker{
 			generator.setGenerators(generators);
 
 			generator.run(folders);
-		}
+		}		
 	}
-	
-	public String getSeparator() {
-		return separator;
-	}
-
-	public void setSeparator(String separator) {
-		this.separator = separator;
-	}
-	
+		
 	public void setGenerators(List<AbstractGenerator> generators) {
 		this.generators = generators;		
 	}
