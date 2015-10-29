@@ -14,11 +14,11 @@ import org.thiagodnf.analysis.util.LoggerUtils;
  * @since 2015-10-27
  * @version 1.0.0
  */
-public class ApproximateTrueParetoFrontGenerator extends ParetoFrontGenerator {
+public class AproxParetoFrontGenerator extends ParetoFrontGenerator {
 	
-	protected final static Logger logger = LoggerUtils.getLogger(ApproximateTrueParetoFrontGenerator.class.getName());
+	protected final static Logger logger = LoggerUtils.getLogger(AproxParetoFrontGenerator.class.getName());
 	
-	public ApproximateTrueParetoFrontGenerator(JFrame parent, File[] folders) {
+	public AproxParetoFrontGenerator(JFrame parent, File[] folders) {
 		super(parent, folders);
 	}
 		

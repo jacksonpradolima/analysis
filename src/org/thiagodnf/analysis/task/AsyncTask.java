@@ -83,24 +83,5 @@ public abstract class AsyncTask extends SwingWorker<Object, Object> implements P
 		updateProgress(monitor.getMaximum());
 	}
 	
-	@Override
-	protected void done() {
-		if (pendingAsyncTask.isEmpty()) {
-			MessageBoxWindow.info(parent, "Done");
-		} else {
-			AsyncTask task = pendingAsyncTask.remove(0);
-			task.setPendingAsyncTask(pendingAsyncTask);
-			task.execute();
-		}
-	}
-
 	public abstract String toString();
-
-	public List<AsyncTask> getPendingAsyncTask() {
-		return pendingAsyncTask;
-	}
-
-	public void setPendingAsyncTask(List<AsyncTask> pendingAsyncTask) {
-		this.pendingAsyncTask = pendingAsyncTask;
-	}
 }

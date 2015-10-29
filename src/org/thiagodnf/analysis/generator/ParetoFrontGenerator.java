@@ -23,7 +23,7 @@ public abstract class ParetoFrontGenerator extends Generator {
 	protected final static Logger logger = LoggerUtils.getLogger(ParetoFrontGenerator.class.getName());
 	
 	public ParetoFrontGenerator(JFrame parent, File[] folder) {
-		super(parent, null);
+		super(parent, folder);
 	}
 	
 	protected void generate(String folder, List<String> files, String filename, int totalOfFiles) throws Exception {

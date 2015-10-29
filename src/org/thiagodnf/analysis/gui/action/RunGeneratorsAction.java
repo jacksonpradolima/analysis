@@ -2,6 +2,7 @@ package org.thiagodnf.analysis.gui.action;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -31,9 +32,9 @@ public class RunGeneratorsAction extends AbstractAction {
 			
 			if (window.showOptionDialog() == JOptionPane.YES_OPTION) {
 				
-				List<String> generators = window.getSelectedGenerators();
+				List<String> generatorNames = window.getSelectedGenerators();
 
-				if (generators.isEmpty()) {
+				if (generatorNames.isEmpty()) {
 					throw new IllegalArgumentException("You must to select at least one generator");
 				}
 				
@@ -49,15 +50,21 @@ public class RunGeneratorsAction extends AbstractAction {
 
 					final File[] folders = fc.getSelectedFiles();
 
-					for (String genName : generators) {
-						Generator generator = GeneratorFactory.getGenerator(parent, genName, folders);
-					//generator.setPendingAsyncTask(generators);
-						generator.execute();
+					List<Generator> generators = new ArrayList<Generator>();
+					
+					for (String genName : generatorNames) {
+						generators.add(GeneratorFactory.getGenerator(parent, genName, folders));
 					}
+					
+					Generator generator = generators.remove(0);
+					
+					generator.setPendingGenerator(generators);
+					
+					generator.execute();					
 				}
 			}
 		} catch (Exception ex) {
-			MessageBoxWindow.info(parent, ex.getMessage());
+			MessageBoxWindow.error(parent, ex.getMessage());
 			ex.printStackTrace();
 		}
 	}

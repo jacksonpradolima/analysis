@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.thiagodnf.analysis.generator.ApproximateTrueParetoFrontGenerator;
+import org.thiagodnf.analysis.generator.AproxParetoFrontGenerator;
 import org.thiagodnf.analysis.generator.FUNALLGenerator;
 import org.thiagodnf.analysis.generator.KnownParetoFrontGenerator;
 import org.thiagodnf.analysis.generator.QualityIndicatorsGenerator;
@@ -80,7 +80,7 @@ public class ChooseGeneratorsWindow extends JPanel{
 			generators.add(KnownParetoFrontGenerator.class.getSimpleName());
 		}
 		if (this.runApproximateTrueParetoFrontGeneratorCheckBox.isSelected()) {
-			generators.add(ApproximateTrueParetoFrontGenerator.class.getSimpleName());
+			generators.add(AproxParetoFrontGenerator.class.getSimpleName());
 		}
 		if (this.runQualityIndicatorsCheckBox.isSelected()) {
 			generators.add(QualityIndicatorsGenerator.class.getSimpleName());

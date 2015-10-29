@@ -32,6 +32,10 @@ public class SolutionSetUtils {
 			while (it.hasNext()) {
 				String[] split = it.nextLine().split(" ");
 				
+				if (split.length == 1 && split[0].isEmpty()) {
+					continue;
+				}
+				
 				int numberOfObjectives = split.length;
 
 				if (maxObjectives == -1) {
