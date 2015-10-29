@@ -29,6 +29,7 @@ public abstract class Generator extends AsyncTask {
 		Preconditions.checkArgument(folders.length != 0, "You need to select at least a folder");
 		
 		this.folders = folders;
+		this.pendingGenerator = new ArrayList<Generator>();
 	}
 	
 	public void setPendingGenerator(List<Generator> pendingGenerator) {
@@ -38,7 +39,13 @@ public abstract class Generator extends AsyncTask {
 	@Override
 	protected void done() {
 		if (pendingGenerator.isEmpty()) {
-			MessageBoxWindow.info(parent, "Done");
+			if (!monitor.isCanceled() && !isCancelled()) {
+				MessageBoxWindow.info(parent, "Done");
+			} else {
+				if (throwException != null) {
+					MessageBoxWindow.error(parent, throwException.getMessage());
+				}
+			}
 		} else {
 			Generator gen = pendingGenerator.remove(0);
 
@@ -49,12 +56,15 @@ public abstract class Generator extends AsyncTask {
 	}
 		
 	protected List<String> getFilesStartingWith(File[] folders, String startWith, String ignore) {
-		updateMaximum(folders.length);
-
 		List<String> files = new ArrayList<String>();
 
 		for (File folder : folders) {
 			files.addAll(FilesUtils.getFiles(folder, startWith, ignore));
+		}
+		
+		if (files.isEmpty()) {
+			cancel(true);
+			throwException = new IllegalArgumentException(startWith + " files have not been found");
 		}
 
 		return files;

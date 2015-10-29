@@ -31,7 +31,7 @@ public class FUNALLGenerator extends ParetoFrontGenerator {
 	protected Void doInBackground() throws Exception {
 		
 		List<String> files = getFilesStartingWith(folders, "FUN_", "ALL");
-
+		
 		logger.info(files.size() + " has been found");
 
 		updateMaximum(files.size());

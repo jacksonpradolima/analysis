@@ -2,7 +2,6 @@ package org.thiagodnf.analysis.gui.window;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -10,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-
 import org.thiagodnf.analysis.generator.AproxParetoFrontGenerator;
 import org.thiagodnf.analysis.generator.FUNALLGenerator;
 import org.thiagodnf.analysis.generator.KnownParetoFrontGenerator;
@@ -51,7 +49,18 @@ public class ChooseGeneratorsWindow extends JPanel{
 		add(Box.createVerticalStrut(10));
 		add(runQualityIndicatorsCheckBox);
 		add(Box.createVerticalStrut(10));
-		add(statisticalIndicatorsCheckBox);
+		add(statisticalIndicatorsCheckBox);	
+		
+//		runAllCheckBox.addItemListener(new ItemListener() {
+//			// When the user selects this components
+//		    public void itemStateChanged(ItemEvent e) {
+//				for (Component c : getComponents()) {
+//					if (c != runAllCheckBox) {
+//						c.setEnabled(e.getStateChange() == 2);
+//					}
+//				}
+//		    }
+//		});
 	}
 	
 	protected JCheckBox getNewJCheckBox(String name) {
@@ -85,7 +94,7 @@ public class ChooseGeneratorsWindow extends JPanel{
 		if (this.runQualityIndicatorsCheckBox.isSelected()) {
 			generators.add(QualityIndicatorsGenerator.class.getSimpleName());
 		}
-
+	
 		return generators;
 	}	
 }
