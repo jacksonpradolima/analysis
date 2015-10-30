@@ -10,10 +10,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.thiagodnf.analysis.generator.Generator;
-import org.thiagodnf.analysis.generator.GeneratorFactory;
 import org.thiagodnf.analysis.gui.window.ChooseGeneratorsWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.task.generator.Generator;
+import org.thiagodnf.analysis.task.generator.GeneratorFactory;
 
 public class RunGeneratorsAction extends AbstractAction {
 
@@ -27,45 +26,40 @@ public class RunGeneratorsAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		try{
-			ChooseGeneratorsWindow window = new ChooseGeneratorsWindow(parent);
+		ChooseGeneratorsWindow window = new ChooseGeneratorsWindow(parent);
+		
+		if (window.showOptionDialog() == JOptionPane.YES_OPTION) {
 			
-			if (window.showOptionDialog() == JOptionPane.YES_OPTION) {
-				
-				List<String> generatorNames = window.getSelectedGenerators();
+			List<String> generatorNames = window.getSelectedGenerators();
 
-				if (generatorNames.isEmpty()) {
-					throw new IllegalArgumentException("You must to select at least one generator");
-				}
-				
-				final JFileChooser fc = new JFileChooser();
-	
-				fc.setCurrentDirectory(new File("."));
-				
-				fc.setMultiSelectionEnabled(true);
-				
-				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				
-				if (fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
-
-					final File[] folders = fc.getSelectedFiles();
-
-					List<Generator> generators = new ArrayList<Generator>();
-					
-					for (String genName : generatorNames) {
-						generators.add(GeneratorFactory.getGenerator(parent, genName, folders));
-					}
-					
-					Generator generator = generators.remove(0);
-					
-					generator.setPendingGenerator(generators);
-					
-					generator.execute();					
-				}
+			if (generatorNames.isEmpty()) {
+				throw new IllegalArgumentException("You must to select at least one generator");
 			}
-		} catch (Exception ex) {
-			MessageBoxWindow.error(parent, ex.getMessage());
-			ex.printStackTrace();
+			
+			final JFileChooser fc = new JFileChooser();
+
+			fc.setCurrentDirectory(new File("."));
+			
+			fc.setMultiSelectionEnabled(true);
+			
+			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			
+			if (fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
+
+				final File[] folders = fc.getSelectedFiles();
+
+				List<Generator> generators = new ArrayList<Generator>();
+				
+				for (String genName : generatorNames) {
+					generators.add(GeneratorFactory.getGenerator(parent, genName, folders));
+				}
+				
+				Generator generator = generators.remove(0);
+				
+				generator.setPendingGenerator(generators);
+				
+				generator.execute();					
+			}
 		}
 	}
 }

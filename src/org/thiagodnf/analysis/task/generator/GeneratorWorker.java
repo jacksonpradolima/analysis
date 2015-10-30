@@ -1,4 +1,4 @@
-package org.thiagodnf.analysis.generator;
+package org.thiagodnf.analysis.task.generator;
 
 import java.io.File;
 import java.util.List;

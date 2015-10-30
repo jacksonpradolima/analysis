@@ -1,8 +1,9 @@
-package org.thiagodnf.analysis.generator;
+package org.thiagodnf.analysis.task.generator;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
@@ -38,23 +39,29 @@ public abstract class Generator extends AsyncTask {
 	
 	@Override
 	protected void done() {
-		if (pendingGenerator.isEmpty()) {
-			if (!monitor.isCanceled() && !isCancelled()) {
+		try {
+			get();
+
+			if (pendingGenerator.isEmpty()) {
 				MessageBoxWindow.info(parent, "Done");
 			} else {
-				if (throwException != null) {
-					MessageBoxWindow.error(parent, throwException.getMessage());
-				}
+				Generator gen = pendingGenerator.remove(0);
+				gen.setPendingGenerator(pendingGenerator);
+				gen.execute();
 			}
-		} else {
-			Generator gen = pendingGenerator.remove(0);
-
-			gen.setPendingGenerator(pendingGenerator);
-
-			gen.execute();
+		} catch (Exception e) {
+			if (!(e instanceof CancellationException)) {
+				e.getCause().printStackTrace();
+				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
+				MessageBoxWindow.error(parent, msg);
+			}
 		}
 	}
 		
+	protected List<String> getFilesStartingWith(File[] folders, String startWith) {
+		return getFilesStartingWith(folders, startWith, null);
+	}
+	
 	protected List<String> getFilesStartingWith(File[] folders, String startWith, String ignore) {
 		List<String> files = new ArrayList<String>();
 
@@ -63,8 +70,7 @@ public abstract class Generator extends AsyncTask {
 		}
 		
 		if (files.isEmpty()) {
-			cancel(true);
-			throwException = new IllegalArgumentException(startWith + " files have not been found");
+			throw new IllegalArgumentException(startWith + " files have not been found");
 		}
 
 		return files;

@@ -1,4 +1,4 @@
-package org.thiagodnf.analysis.generator;
+package org.thiagodnf.analysis.task.generator;
 
 import java.io.File;
 
@@ -13,6 +13,10 @@ public class GeneratorFactory {
 			return new AproxParetoFrontGenerator(parent, folders);
 		} else if (generatorName.equalsIgnoreCase(KnownParetoFrontGenerator.class.getSimpleName())) {
 			return new KnownParetoFrontGenerator(parent, folders);
+		}else if (generatorName.equalsIgnoreCase(QualityIndicatorsGenerator.class.getSimpleName())) {
+			return new QualityIndicatorsGenerator(parent, folders);
+		}else if (generatorName.equalsIgnoreCase(SummaryGenerator.class.getSimpleName())) {
+			return new SummaryGenerator(parent, folders);
 		}
 		
 		return null;

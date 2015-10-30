@@ -18,8 +18,6 @@ public abstract class AsyncTask extends SwingWorker<Object, Object>{
 	
 	protected List<AsyncTask> pendingAsyncTask;
 	
-	protected Exception throwException;
-
 	public AsyncTask(JFrame parent) {
 		super();
 		

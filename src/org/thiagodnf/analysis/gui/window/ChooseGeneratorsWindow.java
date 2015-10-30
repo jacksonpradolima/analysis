@@ -2,6 +2,7 @@ package org.thiagodnf.analysis.gui.window;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -9,10 +10,12 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import org.thiagodnf.analysis.generator.AproxParetoFrontGenerator;
-import org.thiagodnf.analysis.generator.FUNALLGenerator;
-import org.thiagodnf.analysis.generator.KnownParetoFrontGenerator;
-import org.thiagodnf.analysis.generator.QualityIndicatorsGenerator;
+
+import org.thiagodnf.analysis.task.generator.AproxParetoFrontGenerator;
+import org.thiagodnf.analysis.task.generator.FUNALLGenerator;
+import org.thiagodnf.analysis.task.generator.KnownParetoFrontGenerator;
+import org.thiagodnf.analysis.task.generator.QualityIndicatorsGenerator;
+import org.thiagodnf.analysis.task.generator.SummaryGenerator;
 
 public class ChooseGeneratorsWindow extends JPanel{
 
@@ -26,9 +29,9 @@ public class ChooseGeneratorsWindow extends JPanel{
 	
 	protected JCheckBox runFunAllGeneratorCheckBox;
 	
-	protected JCheckBox runQualityIndicatorsCheckBox;
+	protected JCheckBox runQualityIndicatorsGeneratorCheckBox;
 	
-	protected JCheckBox statisticalIndicatorsCheckBox;
+	protected JCheckBox runSummaryGeneratorCheckBox;
 	
 	public ChooseGeneratorsWindow(JFrame parent){
 		this.parent = parent;
@@ -38,8 +41,8 @@ public class ChooseGeneratorsWindow extends JPanel{
 		this.runFunAllGeneratorCheckBox = getNewJCheckBox("FUNALL Files");
 		this.runKnownParetoFrontGeneratorCheckBox = getNewJCheckBox("Known Pareto-front");
 		this.runApproximateTrueParetoFrontGeneratorCheckBox = getNewJCheckBox("Approximate True Pareto-front");
-		this.runQualityIndicatorsCheckBox = getNewJCheckBox("Quality Indicators");
-		this.statisticalIndicatorsCheckBox = getNewJCheckBox("Statistical Indicators");
+		this.runQualityIndicatorsGeneratorCheckBox = getNewJCheckBox("Quality Indicators");
+		this.runSummaryGeneratorCheckBox = getNewJCheckBox("Summary");
 		
 		add(runFunAllGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
@@ -47,9 +50,9 @@ public class ChooseGeneratorsWindow extends JPanel{
 		add(Box.createVerticalStrut(10));
 		add(runApproximateTrueParetoFrontGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
-		add(runQualityIndicatorsCheckBox);
+		add(runQualityIndicatorsGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
-		add(statisticalIndicatorsCheckBox);	
+		add(runSummaryGeneratorCheckBox);	
 		
 //		runAllCheckBox.addItemListener(new ItemListener() {
 //			// When the user selects this components
@@ -91,8 +94,11 @@ public class ChooseGeneratorsWindow extends JPanel{
 		if (this.runApproximateTrueParetoFrontGeneratorCheckBox.isSelected()) {
 			generators.add(AproxParetoFrontGenerator.class.getSimpleName());
 		}
-		if (this.runQualityIndicatorsCheckBox.isSelected()) {
+		if (this.runQualityIndicatorsGeneratorCheckBox.isSelected()) {
 			generators.add(QualityIndicatorsGenerator.class.getSimpleName());
+		}
+		if (this.runSummaryGeneratorCheckBox.isSelected()) {
+			generators.add(SummaryGenerator.class.getSimpleName());
 		}
 	
 		return generators;
