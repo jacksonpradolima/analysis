@@ -29,7 +29,15 @@ public class SummaryGenerator extends Generator{
 	@Override
 	protected Object doInBackground() throws Exception {
 
-		List<String> files = getFilesStartingWith(folders, "QI_", "ALL");
+		List<String> qiFiles = getFilesStartingWith(folders, "QI_", "ALL");
+		
+		List<String> files = new ArrayList<String>();
+		
+		for (String file : qiFiles) {
+			if (!file.contains("PFKNOWN")) {
+				files.add(file);
+			}
+		}
 		
 		logger.info(files.size() + " has been found");
 

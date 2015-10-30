@@ -4,13 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -26,10 +22,14 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
+import org.apache.commons.io.FilenameUtils;
+import org.thiagodnf.analysis.gui.action.OpenFoldersAction;
+import org.thiagodnf.analysis.gui.action.ReloadAction;
 import org.thiagodnf.analysis.gui.action.RunGeneratorsAction;
-import org.thiagodnf.core.util.FilesUtils;
+import org.thiagodnf.analysis.gui.component.ResultTab;
 import org.thiagodnf.core.util.ImageUtils;
-import org.thiagodnf.core.util.PropertiesUtils;
+
+import com.google.common.base.Preconditions;
 
 public class MainWindow extends JFrame implements ActionListener{
 	
@@ -39,11 +39,12 @@ public class MainWindow extends JFrame implements ActionListener{
 	
 	protected JTabbedPane tabbedPane;
 	
-	protected File currentFolder;
+	protected List<String> folders;
 	
 	private List<String> filter = new ArrayList<String>();
 	
 	public MainWindow() {
+		this.folders = new ArrayList<String>();
 		
 		//Settings
 		setTitle("GrES Experiments");
@@ -77,7 +78,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		searchField.addActionListener(this);
 		searchField.setMinimumSize( new Dimension( 238, 300 ) );
         
-		toolBar.add(getNewToolBarButton("folder.png", "Open a folder", "open"));
+		toolBar.add(getNewToolBarButton("folder.png", new OpenFoldersAction(this)));
 		toolBar.addSeparator();
 		toolBar.add(getNewToolBarButton("statistics.png", "Run Statistical Test", "statistical-test"));
 		toolBar.add(getNewToolBarButton("pencil.png", new RunGeneratorsAction(this)));
@@ -90,16 +91,6 @@ public class MainWindow extends JFrame implements ActionListener{
 	
 	protected void addComponents(){
 		this.tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		
-//		this.tabbedPane.addTab("Hypervolume", new ResultPanel(this,"hypervolume"));
-//		this.tabbedPane.addTab("IGD", new ResultPanel(this,"igd"));
-//		this.tabbedPane.addTab("GD", new ResultPanel(this,"gd"));
-//		this.tabbedPane.addTab("Spread", new ResultPanel(this,"spread"));
-//		this.tabbedPane.addTab("Epsilon", new ResultPanel(this,"epsilon"));
-//		this.tabbedPane.addTab("Number Of Solutions", new ResultPanel(this,"numberOfSolutions"));
-//		this.tabbedPane.addTab("In Pareto Front", new ResultPanel(this,"inParetoFront"));
-//		this.tabbedPane.addTab("Time", new ResultPanel(this,"time"));
-		
 		getContentPane().add(tabbedPane);
 	}
 	
@@ -139,11 +130,11 @@ public class MainWindow extends JFrame implements ActionListener{
 		closeMenuItem.setActionCommand("close");
 		closeMenuItem.addActionListener(this);
 		
-		fileMenu.add(getNewMenuItem("Open", "open", "Open folder"));
+		fileMenu.add(getNewMenuItem("Open", new OpenFoldersAction(this)));
 		fileMenu.addSeparator();
 		fileMenu.add(exportMenu);
 		fileMenu.addSeparator();
-		fileMenu.add(getNewMenuItem("Reload", "reload", "Reload the folder"));
+		fileMenu.add(getNewMenuItem("Reload", new ReloadAction(this)));
 		fileMenu.addSeparator();
 		fileMenu.add(closeMenuItem);
 				
@@ -159,15 +150,28 @@ public class MainWindow extends JFrame implements ActionListener{
 	}
 	
 	public void reloadFolder() throws IOException{
-//		if(currentFolder == null){
-//			throw new IllegalArgumentException("You need to load a folder first");
+		Preconditions.checkArgument(!folders.isEmpty(), "You need to load a folder first");
+		
+		List<String> files = new ArrayList<String>();
+		
+//		for (String folder : currentFolders) {
+//			files.addAll(FilesUtils.getFiles(folder.getAbsoluteFile(), "SUMMARY"));
 //		}
-//		
-//		List<String> files = FilesUtils.getFiles(currentFolder, "STATS");
-//		
+		
+		System.out.println(files);
+		
 //		if (files.isEmpty()) {
-//			throw new IllegalArgumentException("No STATS file was found");
+//			throw new IllegalArgumentException("No SUMMARY file was found");
 //		}
+		
+		for (String folder : folders) {
+			String name = FilenameUtils.getName(folder);
+			
+			if (!tabContains(folder)) {
+				this.tabbedPane.addTab(name, new ResultTab(this, folder));
+				
+			}
+		}
 //		
 //		Map<String, Properties> map = new HashMap<String, Properties>();
 //		
@@ -180,6 +184,17 @@ public class MainWindow extends JFrame implements ActionListener{
 //		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
 //			getTabAt(i).load(filter, map);
 //		}
+	}
+	
+	protected boolean tabContains(String name) {
+		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+			ResultTab resultTab = (ResultTab) tabbedPane.getComponent(i);
+			if (resultTab.getFolderName().equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 	protected JMenuItem getNewMenuItem(String title, String actionCommand, String tooltip) {
@@ -218,20 +233,8 @@ public class MainWindow extends JFrame implements ActionListener{
 		return button;
 	}
 	
-//	public ResultPanel getSelectedTab() {
-//		return ((ResultPanel) tabbedPane.getComponentAt(tabbedPane.getSelectedIndex()));
-//	}
-//	
-//	public ResultPanel getTabAt(int index) {
-//		return ((ResultPanel) tabbedPane.getComponentAt(index));
-//	}
-	
-	public void setCurrentFolder(File currentFolder) {
-		this.currentFolder = currentFolder;
-	}
-
-	public File getCurrentFolder() {
-		return this.currentFolder;
+	public List<String> getFolders() {
+		return this.folders;
 	}
 
 	public List<String> getFilter() {
