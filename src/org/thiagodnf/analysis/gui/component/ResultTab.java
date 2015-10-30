@@ -118,6 +118,7 @@ public class ResultTab extends Panel{
 				String.valueOf(prop.get("igd.mean")),					
 			};
 			
+			
 			data.add(row);
 		}
 		
