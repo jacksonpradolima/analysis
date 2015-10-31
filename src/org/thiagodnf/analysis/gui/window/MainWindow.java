@@ -43,7 +43,7 @@ public class MainWindow extends JFrame {
 	
 	public MainWindow() {
 		//Settings
-		setTitle("Analysis by Thiago Nascimento");
+		setTitle("Analysis");
 		setSize(800, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -58,7 +58,7 @@ public class MainWindow extends JFrame {
 		setIconImage(ImageUtils.getFromFile(this, "logo.png"));
 
 		addToolBar();
-		addComponents();
+		addComponents();		
 	}
 	
 	protected void addToolBar(){
