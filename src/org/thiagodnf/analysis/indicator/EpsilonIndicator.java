@@ -5,12 +5,12 @@ import jmetal.qualityIndicator.QualityIndicator;
 
 public class EpsilonIndicator extends Indicator{
 
-	public EpsilonIndicator(QualityIndicator qi) {
-		super(qi);		
+	public EpsilonIndicator() {
+		super("Epsilon", "epsilon");
 	}
 
 	@Override
-	public double execute(String file, SolutionSet population) {
+	public double execute(QualityIndicator qi, SolutionSet paretoFront, String file, SolutionSet population) {
 		return qi.getEpsilon(population);
 	}
 }

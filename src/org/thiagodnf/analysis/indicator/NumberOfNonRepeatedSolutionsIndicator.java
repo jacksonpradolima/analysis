@@ -7,12 +7,12 @@ import org.thiagodnf.analysis.util.SolutionSetUtils;
 
 public class NumberOfNonRepeatedSolutionsIndicator extends Indicator {
 
-	public NumberOfNonRepeatedSolutionsIndicator(QualityIndicator qi) {
-		super(qi);
+	public NumberOfNonRepeatedSolutionsIndicator() {
+		super("Non-repeated Solutions", "non-repeated-solutions");
 	}
 
 	@Override
-	public double execute(String file, SolutionSet population) {
+	public double execute(QualityIndicator qi, SolutionSet paretoFront,String file, SolutionSet population) {
 		SolutionSet nonRepeatedpopulation = SolutionSetUtils.removeRepeatedSolutions(population);
 		return nonRepeatedpopulation.size();
 	}

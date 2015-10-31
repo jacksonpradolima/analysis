@@ -4,8 +4,9 @@ import java.awt.Panel;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.BoxLayout;
@@ -16,7 +17,19 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.thiagodnf.analysis.custom.DoubleComparator;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.indicator.EpsilonIndicator;
+import org.thiagodnf.analysis.indicator.GDIndicator;
+import org.thiagodnf.analysis.indicator.HypervolumeIndicator;
+import org.thiagodnf.analysis.indicator.IGDIndicator;
+import org.thiagodnf.analysis.indicator.InParetoFrontIndicator;
+import org.thiagodnf.analysis.indicator.NumberOfNonRepeatedSolutionsIndicator;
+import org.thiagodnf.analysis.indicator.NumberOfSolutionsIndicator;
+import org.thiagodnf.analysis.indicator.SpreadIndicator;
+import org.thiagodnf.analysis.indicator.TimeIndicator;
+import org.thiagodnf.analysis.util.NumberUtils;
+import org.thiagodnf.analysis.util.SettingsUtils;
 import org.thiagodnf.core.util.FilesUtils;
 import org.thiagodnf.core.util.PropertiesUtils;
 
@@ -32,13 +45,31 @@ public class ResultTab extends Panel{
 	
 	protected JFrame parent;
 	
+	protected Map<String, String> map;
+	
 	public ResultTab(JFrame parent, String folderName){
 		this.folderName = folderName;	
 		this.parent = parent;
 		
-		String[] columnNames = new String []{"#","Path","Hypervolume", "IGD"};
+		this.map = new HashMap<String, String>();
 		
-		this.model = new DefaultTableModel(new Object[][]{}, columnNames);
+		List<String> columnNames = new ArrayList<String>();
+		
+		columnNames.add("#");
+		columnNames.add("Path");
+		columnNames.add(new HypervolumeIndicator().getName());
+		columnNames.add(new GDIndicator().getName());
+		columnNames.add(new IGDIndicator().getName());
+		columnNames.add(new SpreadIndicator().getName());
+		columnNames.add(new EpsilonIndicator().getName());
+		columnNames.add(new NumberOfSolutionsIndicator().getName());
+		columnNames.add(new NumberOfNonRepeatedSolutionsIndicator().getName());
+		columnNames.add(new InParetoFrontIndicator().getName());
+		columnNames.add(new TimeIndicator().getName());
+		
+		String[] columns = columnNames.toArray(new String[columnNames.size()]);
+
+		this.model = new DefaultTableModel(new Object[][] {}, columns);
 		
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
@@ -55,8 +86,9 @@ public class ResultTab extends Panel{
                     default:
                     	return String.class;
                 }
+                
             }
-            
+                      
             public boolean isCellEditable(int row, int column) {
 				if (column == 0) {
 					return true;
@@ -69,11 +101,10 @@ public class ResultTab extends Panel{
 		
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
 		
-//		sorter.setComparator(2, new DoubleComparator());
-//		sorter.setComparator(3, new DoubleComparator());
-//		sorter.setComparator(4, new DoubleComparator());
-//		sorter.setComparator(5, new DoubleComparator());
-//		sorter.setComparator(6, new DoubleComparator());
+		// Add custom comparator in table's columns
+		for (int i = 2; i < columnNames.size(); i++) {
+			sorter.setComparator(i, new DoubleComparator());
+		}
 		
 		this.table.setRowSorter(sorter);
 		
@@ -93,41 +124,49 @@ public class ResultTab extends Panel{
 	public void load() throws IOException{
 		List<String> files = FilesUtils.getFiles(new File(folderName), "SUMMARY");
 		
-		List<String> indicators = new ArrayList<String>();
-		
-		// Get all indicator	
-		for (String file : files) {
-			Properties prop = PropertiesUtils.getFromFile(file);
-			for (Entry<Object, Object> entry : prop.entrySet()) {
-				if (!indicators.contains(entry.getKey())) {
-					indicators.add((String) entry.getKey());
-				}
-			}
-		}	
 		
 		List<Object[]> data = new ArrayList<Object[]>();
 		
+		int round = SettingsUtils.getDecimalPlaces();
+		
 		// Get all indicator	
 		for (String file : files) {
+			String path = file.replaceFirst(folderName, "").replaceFirst("SUMMARY","");
+			
+			// Save the link to file
+			if (!map.containsKey(path)) {
+				map.put(path, file);
+			}
+			
 			Properties prop = PropertiesUtils.getFromFile(file);
 			
-			Object[] row = new Object[] { 
+			Object[] row = new Object[] {
 				new Boolean(false),
-				file.replaceFirst(folderName,"").replaceFirst("SUMMARY",""),
-				String.valueOf(prop.get("hypervolume.mean")),
-				String.valueOf(prop.get("igd.mean")),					
+				path,
+				NumberUtils.formatNumbers(prop, new HypervolumeIndicator().getKey(), round),
+				NumberUtils.formatNumbers(prop, new GDIndicator().getKey(), round),
+				NumberUtils.formatNumbers(prop, new IGDIndicator().getKey(), round),
+				NumberUtils.formatNumbers(prop, new SpreadIndicator().getKey(), round),
+				NumberUtils.formatNumbers(prop, new EpsilonIndicator().getKey(), round),
+				NumberUtils.formatNumbers(prop, new NumberOfSolutionsIndicator().getKey(), round),
+				NumberUtils.formatNumbers(prop, new NumberOfNonRepeatedSolutionsIndicator().getKey(), round),
+				NumberUtils.formatNumbers(prop, new InParetoFrontIndicator().getKey(), round),
+				NumberUtils.formatNumbers(prop, new TimeIndicator().getKey(), round),
 			};
-			
 			
 			data.add(row);
 		}
-		
+				
 		// Before add new datas, remove all rows on table
 		clear();
 		
 		for (Object[] d : data) {
 			((DefaultTableModel) table.getModel()).addRow(d);
 		}
+	}
+	
+	public JTable getJTable() {
+		return this.table;
 	}
 	
 	public void clear(){
@@ -140,4 +179,33 @@ public class ResultTab extends Panel{
 		return folderName;
 	}
 
+	public void clearSelection() {
+		for (int i = 0; i < table.getRowCount(); i++) {
+			table.getModel().setValueAt(new Boolean(false), i, 0);
+		}
+	}
+	
+	public List<Integer> getMarkedRows() {
+		List<Integer> selectedRows = new ArrayList<Integer>();
+
+		for (int i = 0; i < table.getModel().getRowCount(); i++) {
+			if (table.getModel().getValueAt(i, 0).equals(new Boolean(true))) {
+				selectedRows.add(i);
+			}
+		}
+
+		return selectedRows;
+	}
+	
+	public List<String> getSelectedFolderFiles() {
+		List<String> files = new ArrayList<String>();
+
+		List<Integer> markedRows = getMarkedRows();
+
+		for (Integer rowId : markedRows) {
+			files.add(map.get(table.getModel().getValueAt(rowId, 1)));
+		}
+
+		return files;
+	}
 }

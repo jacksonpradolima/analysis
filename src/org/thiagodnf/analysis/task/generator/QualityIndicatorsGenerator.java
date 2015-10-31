@@ -20,14 +20,8 @@ import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
 
 import org.apache.commons.io.FilenameUtils;
-import org.thiagodnf.analysis.indicator.EpsilonIndicator;
-import org.thiagodnf.analysis.indicator.GDIndicator;
-import org.thiagodnf.analysis.indicator.HypervolumeIndicator;
-import org.thiagodnf.analysis.indicator.IGDIndicator;
-import org.thiagodnf.analysis.indicator.InParetoFrontIndicator;
-import org.thiagodnf.analysis.indicator.NumberOfNonRepeatedSolutionsIndicator;
-import org.thiagodnf.analysis.indicator.NumberOfSolutionsIndicator;
-import org.thiagodnf.analysis.indicator.SpreadIndicator;
+import org.thiagodnf.analysis.indicator.Indicator;
+import org.thiagodnf.analysis.util.IndicatorUtils;
 import org.thiagodnf.analysis.util.LoggerUtils;
 import org.thiagodnf.analysis.util.SolutionSetUtils;
 import org.thiagodnf.core.util.PropertiesUtils;
@@ -121,14 +115,11 @@ public class QualityIndicatorsGenerator extends Generator {
 		
 		Properties values = new Properties();
 		
-		values.put("hypervolume", new HypervolumeIndicator(qi).execute(file, population));
-		values.put("gd", new GDIndicator(qi).execute(file, population));
-		values.put("igd", new IGDIndicator(qi).execute(file, population));
-		values.put("spread", new SpreadIndicator(qi).execute(file, population));
-		values.put("epsilon", new EpsilonIndicator(qi).execute(file, population));
-		values.put("number-of-solutions", new NumberOfSolutionsIndicator(qi).execute(file, population));
-		values.put("number-of-non-repeated-solutions", new NumberOfNonRepeatedSolutionsIndicator(qi).execute(file, population));
-		values.put("in-pareto-front", new InParetoFrontIndicator(qi,paretoFront).execute(file, population));
+		List<Indicator> indicators = IndicatorUtils.getIndicatorList();
+
+		for (Indicator ind : indicators) {
+			values.put(ind.getKey(),ind.execute(qi, paretoFront, file, population));
+		}
 		
 		values = convertAllValuesToString(values);
 		

@@ -5,11 +5,35 @@ import jmetal.qualityIndicator.QualityIndicator;
 
 public abstract class Indicator {
 	
-	protected QualityIndicator qi;
+	/**
+	 * Indicator name used to show some readable information to user
+	 */
+	protected String name;
 	
-	public Indicator(QualityIndicator qi) {
-		this.qi = qi;
+	/**
+	 * Value used in QI_ files to identify the indicator that will be read
+	 */
+	protected String key;
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param qi Quality Indicator Object
+	 * @param name Indicator name
+	 * @param key Indicator key
+	 */
+	public Indicator(String name, String key) {
+		this.key = key;
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
 	}
 
-	public abstract double execute(String file, SolutionSet population);
+	public String getKey() {
+		return this.key;
+	}
+	
+	public abstract double execute(QualityIndicator qi, SolutionSet paretoFront, String file, SolutionSet population);
 }

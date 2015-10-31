@@ -1,37 +1,33 @@
 package org.thiagodnf.analysis.gui.window;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 
 import org.apache.commons.io.FilenameUtils;
+import org.thiagodnf.analysis.gui.action.CloseTabAction;
 import org.thiagodnf.analysis.gui.action.OpenFoldersAction;
-import org.thiagodnf.analysis.gui.action.ReloadAction;
+import org.thiagodnf.analysis.gui.action.PreferencesAction;
 import org.thiagodnf.analysis.gui.action.RunGeneratorsAction;
+import org.thiagodnf.analysis.gui.action.SearchAction;
+import org.thiagodnf.analysis.gui.action.ViewDetailsAction;
 import org.thiagodnf.analysis.gui.component.ResultTab;
 import org.thiagodnf.core.util.ImageUtils;
 
 import com.google.common.base.Preconditions;
 
-public class MainWindow extends JFrame implements ActionListener{
+public class MainWindow extends JFrame {
 	
 	protected final static Logger logger = Logger.getLogger(MainWindow.class.getName()); 
 	
@@ -47,17 +43,19 @@ public class MainWindow extends JFrame implements ActionListener{
 		this.folders = new ArrayList<String>();
 		
 		//Settings
-		setTitle("GrES Experiments");
+		setTitle("Analysis");
 		setSize(800, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setFocusable(true);
 		JPopupMenu.setDefaultLightWeightPopupEnabled( false );
 		
+		// Start app with maximized window
+		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		
 		// Default the app icon
 		setIconImage(ImageUtils.getFromFile(this, "logo.png"));
 
-		addMenus();
 		addToolBar();
 		addComponents();		
 	}
@@ -69,126 +67,51 @@ public class MainWindow extends JFrame implements ActionListener{
 		//The user cannot move the toolbar. The toolbar is fixed at top
 		toolBar.setFloatable(false);
 		
-		JTextField searchField = new JTextField(20);
-		searchField.setActionCommand("search");
-		
-//		PromptSupport.setPrompt("Search", searchField);
-//		PromptSupport.setFocusBehavior(PromptSupport.FocusBehavior.SHOW_PROMPT, searchField);
-		
-		searchField.addActionListener(this);
-		searchField.setMinimumSize( new Dimension( 238, 300 ) );
-        
-		toolBar.add(getNewToolBarButton("folder.png", new OpenFoldersAction(this)));
+		toolBar.add(getNewToolBarButton("Open","folder.png", new OpenFoldersAction(this)));
 		toolBar.addSeparator();
-		toolBar.add(getNewToolBarButton("statistics.png", "Run Statistical Test", "statistical-test"));
-		toolBar.add(getNewToolBarButton("pencil.png", new RunGeneratorsAction(this)));
-		toolBar.add(Box.createHorizontalGlue() );
-		toolBar.add(searchField);
+//		toolBar.add(getNewToolBarButton("Stats", "statistics.png", new RunGeneratorsAction(this)));
+		toolBar.add(getNewToolBarButton("Generator", "design.png", new RunGeneratorsAction(this)));
+		toolBar.add(getNewToolBarButton("View Details", "inbox.png", new ViewDetailsAction(this)));
+		toolBar.add(getNewToolBarButton("Statistical Test", "statistics.png", new RunGeneratorsAction(this)));
+		
+		toolBar.addSeparator();
+		toolBar.add(getNewToolBarButton("Search", "search.png", new SearchAction(this)));
+		toolBar.add(getNewToolBarButton("Filter", "filter.png", new RunGeneratorsAction(this)));
+		toolBar.addSeparator();
+		toolBar.add(getNewToolBarButton("Close Tab", "close.png", new CloseTabAction(this)));
+		toolBar.addSeparator();
+		toolBar.add(getNewToolBarButton("Settings", "gear.png", new PreferencesAction(this)));
 		
 		// Add toolbar at window
 		add(toolBar, BorderLayout.NORTH);
 	}
 	
 	protected void addComponents(){
-		this.tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		this.tabbedPane = new JTabbedPane(JTabbedPane.TOP);		
 		getContentPane().add(tabbedPane);
 	}
 	
-	protected void addMenus(){
-		// Edit Menu
-		JMenu editMenu = new JMenu("Edit");
-		
-		editMenu.add(getNewMenuItem("Copy", "copy", "Copy the selected rows to clipboard"));
-		editMenu.addSeparator();
-		editMenu.add(getNewMenuItem("Select All", "select-all", "Select all rows in a tab"));
-		editMenu.add(getNewMenuItem("Clear Selection", "clear-selection", "Unselect the rows in a tab"));
-		
-		// Filter Menu
-		JMenu filterMenu = new JMenu("Filter");
-		filterMenu.add(getNewMenuItem("Filter By Selected Rows", "filter", "Filter the rows"));
-		filterMenu.addSeparator();
-		filterMenu.add(getNewMenuItem("Filter By Best Algorithm", "filter-best-settings", "Filter By Best Algorithm"));
-		
-		// Edit Menu
-		JMenu runMenu = new JMenu("Run");
-		
-		runMenu.add(getNewMenuItem("Generators", new RunGeneratorsAction(this)));
-		runMenu.addSeparator();
-		runMenu.add(getNewMenuItem("Statistical Test", "statistical-test", "Run Statistical Test"));
-		
-		// File Menu
-		
-		JMenu fileMenu = new JMenu("File");
-		
-		JMenu exportMenu = new JMenu("Export");
-		
-		exportMenu.add(getNewMenuItem("CSV", "export-to-csv", "CSV File"));
-		exportMenu.add(getNewMenuItem("Gnuplot", "export-to-gnuplot", "Gnuplot File"));
-		//exportMenu.add(getNewMenuItem("Metric", "export-to-metric", "Metric File"));
-		
-		JMenuItem closeMenuItem = new JMenuItem("Close");
-		closeMenuItem.setActionCommand("close");
-		closeMenuItem.addActionListener(this);
-		
-		fileMenu.add(getNewMenuItem("Open", new OpenFoldersAction(this)));
-		fileMenu.addSeparator();
-		fileMenu.add(exportMenu);
-		fileMenu.addSeparator();
-		fileMenu.add(getNewMenuItem("Reload", new ReloadAction(this)));
-		fileMenu.addSeparator();
-		fileMenu.add(closeMenuItem);
-				
-		//Create the menu bar.
-		JMenuBar menuBar = new JMenuBar();
-				
-		menuBar.add(fileMenu);
-		menuBar.add(editMenu);
-		menuBar.add(filterMenu);
-		menuBar.add(runMenu);
-		
-		setJMenuBar(menuBar);		
-	}
 	
 	public void reloadFolder() throws IOException{
 		Preconditions.checkArgument(!folders.isEmpty(), "You need to load a folder first");
-		
-		List<String> files = new ArrayList<String>();
-		
-//		for (String folder : currentFolders) {
-//			files.addAll(FilesUtils.getFiles(folder.getAbsoluteFile(), "SUMMARY"));
-//		}
-		
-		System.out.println(files);
-		
-//		if (files.isEmpty()) {
-//			throw new IllegalArgumentException("No SUMMARY file was found");
-//		}
-		
+				
 		for (String folder : folders) {
 			String name = FilenameUtils.getName(folder);
 			
 			if (!tabContains(folder)) {
-				this.tabbedPane.addTab(name, new ResultTab(this, folder));
-				
+				this.tabbedPane.addTab(name, new ResultTab(this, folder));				
+			}else{
+				for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+					((ResultTab) tabbedPane.getComponent(i)).load();
+				}
 			}
 		}
-//		
-//		Map<String, Properties> map = new HashMap<String, Properties>();
-//		
-//		for (String filename : files) {
-//			map.put(filename, PropertiesUtils.getFromFile(filename));
-//		}
-//		
-//		logger.info(files.size() + " files was loaded");
-//
-//		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-//			getTabAt(i).load(filter, map);
-//		}
 	}
 	
 	protected boolean tabContains(String name) {
 		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
 			ResultTab resultTab = (ResultTab) tabbedPane.getComponent(i);
+			
 			if (resultTab.getFolderName().equalsIgnoreCase(name)) {
 				return true;
 			}
@@ -197,39 +120,14 @@ public class MainWindow extends JFrame implements ActionListener{
 		return false;
 	}
 	
-	protected JMenuItem getNewMenuItem(String title, String actionCommand, String tooltip) {
-		JMenuItem menuItem = new JMenuItem(title);
-
-		menuItem.setActionCommand(actionCommand);
-		menuItem.addActionListener(this);
-		menuItem.setToolTipText(tooltip);
-
-		return menuItem;
-	}
-	
-	protected JMenuItem getNewMenuItem(String title, AbstractAction action) {
-		JMenuItem menuItem = new JMenuItem(title);
-
-		menuItem.addActionListener(action);
-		
-		return menuItem;
-	}
-	
-	protected JButton getNewToolBarButton(String icon, String tooltip, String actionCommand){
+	protected JButton getNewToolBarButton(String name, String icon, AbstractAction action){
 		JButton button = new JButton(new ImageIcon(ImageUtils.getFromFile(this, icon)));
 		
-		button.setToolTipText(tooltip);
-		button.setActionCommand(actionCommand);
-		button.addActionListener(this);
-		
-		return button;
-	}
-	
-	protected JButton getNewToolBarButton(String icon, AbstractAction action){
-		JButton button = new JButton(new ImageIcon(ImageUtils.getFromFile(this, icon)));
-		
+		button.setText(name);
 		button.addActionListener(action);
-		
+		button.setVerticalTextPosition(SwingConstants.BOTTOM);
+	    button.setHorizontalTextPosition(SwingConstants.CENTER);
+
 		return button;
 	}
 	
@@ -241,37 +139,16 @@ public class MainWindow extends JFrame implements ActionListener{
 		return filter;
 	}
 	
-	@Override
-	public void actionPerformed(ActionEvent event) {
-//		try {
-//			if (event.getActionCommand().equalsIgnoreCase("open")) {
-//				new OpenListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("filter")){
-//				new FilterListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("export-to-csv")){
-//				new ExportToCSVListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("export-to-gnuplot")){
-//				new ExportToGnuplotListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("clear-selection")){
-//				new ClearSelectionListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("select-all")) {
-//				new SelectAllListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("close")) {
-//				new CloseAppListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("search")) {
-//				new SearchListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("reload")) {
-//				new ReloadListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("generators")) {
-//				new GeneratorsListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("statistical-test")) {
-//				new StatisticalTestListener(this).execute(event);
-//			} else if (event.getActionCommand().equalsIgnoreCase("filter-best-settings")) {
-//				new FilterBestSettingsByAlgorithmListener(this).execute(event);
-//			}
-//		} catch (Exception ex) {
-//			AlertDialog.error(this, ex.getMessage());
-//			ex.printStackTrace();
-//		}
+	public ResultTab getSelectedTab() {
+		return (ResultTab) this.tabbedPane.getSelectedComponent();
+	}
+	
+	public void removeSelectedTab(){
+		if(tabbedPane.getTabCount() == 0){
+			throw new IllegalArgumentException("You need to open a folder first");
+		}
+		
+		this.folders.remove(tabbedPane.getSelectedIndex());
+		this.tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());		
 	}
 }

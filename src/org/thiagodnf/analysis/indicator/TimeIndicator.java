@@ -10,12 +10,12 @@ import jmetal.qualityIndicator.QualityIndicator;
 
 public class TimeIndicator extends Indicator{
 
-	public TimeIndicator(QualityIndicator qi) {
-		super(qi);
+	public TimeIndicator() {
+		super("Time", "time");
 	}
 
 	@Override
-	public double execute(String file, SolutionSet population) {
+	public double execute(QualityIndicator qi, SolutionSet paretoFront, String file, SolutionSet population) {
 //		StringBuffer buffer = new StringBuffer();
 //		
 //		String time = getTimeFromFile(fullPath + "TIME_" + filename);

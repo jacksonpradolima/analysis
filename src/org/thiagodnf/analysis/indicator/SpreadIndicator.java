@@ -5,12 +5,12 @@ import jmetal.qualityIndicator.QualityIndicator;
 
 public class SpreadIndicator extends Indicator{
 
-	public SpreadIndicator(QualityIndicator qi) {
-		super(qi);		
+	public SpreadIndicator() {
+		super("Spread", "spread");
 	}
 
 	@Override
-	public double execute(String file, SolutionSet population) {
+	public double execute(QualityIndicator qi, SolutionSet paretoFront, String file, SolutionSet population) {
 		return qi.getSpread(population);
 	}
 }
