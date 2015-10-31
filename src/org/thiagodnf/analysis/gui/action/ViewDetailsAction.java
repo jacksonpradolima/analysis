@@ -7,7 +7,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.thiagodnf.analysis.gui.component.ResultTab;
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 import org.thiagodnf.analysis.gui.window.ViewDetailsWindow;
@@ -29,13 +28,7 @@ public class ViewDetailsAction extends AbstractAction {
 		MainWindow window = (MainWindow) parent;
 		
 		try{
-			ResultTab tab = window.getSelectedTab();
-			
-			if(tab == null){
-				throw new IllegalArgumentException("You must to open at least a folder");
-			}
-			
-			if (tab.getJTable().getSelectedRowCount() == 0) {
+			if (window.getResultTable().getSelectedRowCount() == 0) {
 				throw new IllegalArgumentException("You must to select at least a line");
 			}
 			
@@ -61,9 +54,9 @@ public class ViewDetailsAction extends AbstractAction {
 				throw new IllegalArgumentException("Indicator not found");
 			}
 			
-			String folderName = tab.getFolderName();
+			String folderName = window.getFolder().getAbsolutePath();
 			
-			List<String> files = tab.getSelectedFolderFiles();
+			List<String> files = window.getResultTable().getSelectedFolderFiles();
 			
 			ViewDetailsWindow w = new ViewDetailsWindow(parent, indicator, folderName, files);
 			w.showOptionDialog();

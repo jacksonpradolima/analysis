@@ -53,9 +53,6 @@ public class PreferencesWindow extends JPanel{
 		this.decimalPlatesTextField.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.lookAndFeelComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
-		// Select on combo the saved look and feel
-		this.lookAndFeelComboBox.setSelectedItem(SettingsUtils.getLookAndFeel());
-		
 		add(new JLabel("Decimal Places"));
 		add(Box.createVerticalStrut(10));
 		add(decimalPlatesTextField);
@@ -66,7 +63,10 @@ public class PreferencesWindow extends JPanel{
 		add(Box.createVerticalStrut(10));	
 		add(lookAndFeelComboBox);
 		
-		
+		// Select on combo the saved look and feel
+		this.lookAndFeelComboBox.setSelectedItem(SettingsUtils.getLookAndFeel());
+				
+				
 		// Load all settings and fresh the window
 		if (SettingsUtils.isStandardDeviationVisible()) {
 			this.standardDeviationCheckBox.setSelected(true);

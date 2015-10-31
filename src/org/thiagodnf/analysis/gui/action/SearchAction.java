@@ -5,10 +5,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-import org.thiagodnf.analysis.gui.component.ResultTab;
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 
@@ -27,12 +25,6 @@ public class SearchAction extends AbstractAction {
 		MainWindow window = (MainWindow) parent;
 		
 		try{
-			ResultTab tab = window.getSelectedTab();
-			
-			if(tab == null){
-				throw new IllegalArgumentException("You need to open a folder");
-			}
-			
 			String term = null;
 			
 			while (term == null || term.isEmpty()) {
@@ -47,24 +39,30 @@ public class SearchAction extends AbstractAction {
 				}
 			}
 			
-			tab.clearSelection();
+			if (window.getResultTable().getRowCount() == 0) {
+				throw new IllegalArgumentException("The result table is empty");
+			}
 			
-			JTable table = tab.getJTable();
+			window.getResultTable().clearSelection();
 			
-			ListSelectionModel model = table.getSelectionModel();
+			ListSelectionModel model = window.getResultTable().getSelectionModel();
 			
 			model.clearSelection();
 			
-			for (int i = 0; i < table.getRowCount(); i++) {
-				String path = (String) table.getModel().getValueAt(i, 1);
+			for (int i = 0; i < window.getResultTable().getRowCount(); i++) {
+				String path = (String) window.getResultTable().getModel().getValueAt(i, 1);
 				
 				if (path.contains(term)) {
 					// Selects the line
 					model.addSelectionInterval(i, i);
 					// Check the box at the line
-					table.getModel().setValueAt(new Boolean(true), i, 0);
+					window.getResultTable().getModel().setValueAt(new Boolean(true), i, 0);
 				}
 			}
+			
+			// When selects the rows, define focus to table for the user can
+			// copy the table's content 
+			window.getResultTable().requestFocus();
 		}catch(Exception ex){
 			MessageBoxWindow.error(parent, ex.getMessage());
 			ex.printStackTrace();

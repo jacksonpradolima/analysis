@@ -2,7 +2,6 @@ package org.thiagodnf.analysis.gui.action;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
@@ -30,24 +29,17 @@ public class OpenFoldersAction extends AbstractAction {
 		// The user must to select a folder with all files
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
-		fc.setMultiSelectionEnabled(true);
-		
 		if (fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
 			// Folder that was selected by user
-			File[] folders = fc.getSelectedFiles();
+			File selectedFolder = fc.getSelectedFile();
 			
-			for (File folder : folders) {
-				String path = folder.getAbsolutePath();
-				if (!((MainWindow) parent).getFolders().contains(path)) {
-					((MainWindow) parent).getFolders().add(path);
-				}
-			}
+			((MainWindow) parent).setFolder(selectedFolder);
 			
 			((MainWindow) parent).getFilter().clear();
 			
 			try {
-				((MainWindow) parent).reloadFolder();
-			} catch (IOException ex) {
+				((MainWindow) parent).openFolder();
+			} catch (Exception ex) {
 				MessageBoxWindow.error(parent, ex.getMessage());
 				ex.printStackTrace();
 			}

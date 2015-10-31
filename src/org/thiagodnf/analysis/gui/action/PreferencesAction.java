@@ -1,14 +1,12 @@
 package org.thiagodnf.analysis.gui.action;
 
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
@@ -30,30 +28,30 @@ public class PreferencesAction extends AbstractAction {
 		PreferencesWindow preferencesWindow = new PreferencesWindow(parent);
 		
 		if (preferencesWindow.showOptionDialog() == JOptionPane.YES_OPTION) {
+			// Save the user preferences on pc 
 			preferencesWindow.save();
 			
 			try {
-				UIManager.setLookAndFeel(SettingsUtils.getLookAndFeel());				
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (InstantiationException e1) {
-				e1.printStackTrace();
-			} catch (IllegalAccessException e1) {
-				e1.printStackTrace();
-			} catch (UnsupportedLookAndFeelException e1) {
-				e1.printStackTrace();
-			}
+				if (userChangedTheLookAndFeel()) {
+					UIManager.setLookAndFeel(SettingsUtils.getLookAndFeel());
+
+					// Update look and feel
+					SwingUtilities.updateComponentTreeUI(parent);
+					parent.pack();
+				}
 			
-			// Update look and feel
-			SwingUtilities.updateComponentTreeUI(parent);
-			parent.pack();
-			
-			try {
-				((MainWindow) parent).reloadFolder();
-			} catch (IOException ex) {
+				((MainWindow) parent).getResultTable().reload();
+			} catch (Exception ex) {
 				MessageBoxWindow.error(parent, ex.getMessage());
 				ex.printStackTrace();
 			}
 		}
+	}
+	
+	protected boolean userChangedTheLookAndFeel() {
+		String current = UIManager.getLookAndFeel().toString();
+		String saved = SettingsUtils.getLookAndFeel();
+		
+		return !current.contains(saved);
 	}
 }
