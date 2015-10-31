@@ -1,12 +1,12 @@
 package org.thiagodnf.analysis.indicator;
 
 import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
 
 import jmetal.core.SolutionSet;
 import jmetal.qualityIndicator.QualityIndicator;
+
+import org.apache.commons.io.FilenameUtils;
+import org.thiagodnf.core.util.FilesUtils;
 
 public class TimeIndicator extends Indicator{
 
@@ -16,26 +16,28 @@ public class TimeIndicator extends Indicator{
 
 	@Override
 	public double execute(QualityIndicator qi, SolutionSet paretoFront, String file, SolutionSet population) {
-//		StringBuffer buffer = new StringBuffer();
-//		
-//		String time = getTimeFromFile(fullPath + "TIME_" + filename);
-//
-//		if (!time.isEmpty()) {
-//			buffer.append("time=" + time + "\n");
-//		}
-		return 0;
-	}
-	
-	protected String getTimeFromFile(String filename) throws NumberFormatException {
-		String time = "";
-	
-		try {
-			time = FileUtils.readFileToString(new File(filename));
-		} catch (IOException e) {
-			e.printStackTrace();
+		String filename = FilenameUtils.getName(file);
+		
+		// Ignore FUNALL and PFKNOWN files
+		if (filename.equalsIgnoreCase("FUNALL")) {
+			return 0.0;
+		}
+		if (filename.equalsIgnoreCase("PFKNOWN")) {
+			return 0.0;
 		}
 		
-		return time;
-	}
+		String[] split = filename.split("_");
+		
+		String fullpath = FilenameUtils.getFullPath(file);
+		
+		int id = Integer.valueOf(split[1]);
+		
+		String timePath = fullpath + "/TIME_" + id;
 
+		if (!new File(timePath).exists()) {
+			return 0;
+		}
+		
+		return FilesUtils.getValue(new File(timePath));
+	}
 }

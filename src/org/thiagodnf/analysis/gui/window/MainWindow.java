@@ -16,6 +16,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
 import org.apache.commons.io.FilenameUtils;
+import org.thiagodnf.analysis.gui.action.AboutAction;
 import org.thiagodnf.analysis.gui.action.CloseTabAction;
 import org.thiagodnf.analysis.gui.action.OpenFoldersAction;
 import org.thiagodnf.analysis.gui.action.PreferencesAction;
@@ -81,6 +82,8 @@ public class MainWindow extends JFrame {
 		toolBar.add(getNewToolBarButton("Close Tab", "close.png", new CloseTabAction(this)));
 		toolBar.addSeparator();
 		toolBar.add(getNewToolBarButton("Settings", "gear.png", new PreferencesAction(this)));
+		toolBar.addSeparator();
+		toolBar.add(getNewToolBarButton("About", "info.png", new AboutAction(this)));
 		
 		// Add toolbar at window
 		add(toolBar, BorderLayout.NORTH);
