@@ -61,9 +61,11 @@ public class ViewDetailsAction extends AbstractAction {
 				throw new IllegalArgumentException("Indicator not found");
 			}
 			
+			String folderName = tab.getFolderName();
+			
 			List<String> files = tab.getSelectedFolderFiles();
 			
-			ViewDetailsWindow w = new ViewDetailsWindow(parent, indicator, files);
+			ViewDetailsWindow w = new ViewDetailsWindow(parent, indicator, folderName, files);
 			w.showOptionDialog();
 		}catch(Exception ex){
 			MessageBoxWindow.error(parent, ex.getMessage());

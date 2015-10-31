@@ -35,9 +35,12 @@ public class ViewDetailsWindow extends JPanel{
 	
 	protected List<String> files;
 	
-	public ViewDetailsWindow(JFrame parent, Indicator indicator, List<String> files) throws IOException{
+	protected String folderName;
+	
+	public ViewDetailsWindow(JFrame parent, Indicator indicator, String folderName, List<String> files) throws IOException{
 		this.files = files;
 		this.parent = parent;
+		this.folderName = folderName;
 		this.indicator = indicator;
 		
 		Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -106,7 +109,7 @@ public class ViewDetailsWindow extends JPanel{
 		
 		// Get all indicator	
 		for (String file : files) {
-			String path = file.replaceFirst("SUMMARY","");
+			String path = file.replaceFirst(folderName, "").replaceFirst("SUMMARY","");
 			
 			Properties prop = PropertiesUtils.getFromFile(file);
 			
@@ -143,7 +146,7 @@ public class ViewDetailsWindow extends JPanel{
 		Object[] options = { "Close"};
 
 		// Show the indicator name at title
-		String title = indicator.getName();
+		String title = indicator.getName()+" Indicator";
 		
 		int optionType = JOptionPane.OK_OPTION;
 		int messageType = JOptionPane.PLAIN_MESSAGE;

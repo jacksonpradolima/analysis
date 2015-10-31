@@ -6,10 +6,14 @@ import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 import org.thiagodnf.analysis.gui.window.PreferencesWindow;
+import org.thiagodnf.analysis.util.SettingsUtils;
 
 public class PreferencesAction extends AbstractAction {
 
@@ -27,6 +31,22 @@ public class PreferencesAction extends AbstractAction {
 		
 		if (preferencesWindow.showOptionDialog() == JOptionPane.YES_OPTION) {
 			preferencesWindow.save();
+			
+			try {
+				UIManager.setLookAndFeel(SettingsUtils.getLookAndFeel());				
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (InstantiationException e1) {
+				e1.printStackTrace();
+			} catch (IllegalAccessException e1) {
+				e1.printStackTrace();
+			} catch (UnsupportedLookAndFeelException e1) {
+				e1.printStackTrace();
+			}
+			
+			// Update look and feel
+			SwingUtilities.updateComponentTreeUI(parent);
+			parent.pack();
 			
 			try {
 				((MainWindow) parent).reloadFolder();

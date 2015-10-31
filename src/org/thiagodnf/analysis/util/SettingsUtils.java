@@ -47,4 +47,12 @@ public class SettingsUtils {
 
 		return false;
 	}	
+	
+	public static void setLookAndFeel(String value) {
+		setValue("look-and-feel", value);
+	}
+	
+	public static String getLookAndFeel() {
+		return getValue("look-and-feel", "javax.swing.plaf.nimbus.NimbusLookAndFeel");
+	}
 }
