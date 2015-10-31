@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -28,7 +27,7 @@ public class PreferencesWindow extends JPanel{
 	
 	protected JFormattedTextField decimalPlatesTextField;
 	
-	protected JCheckBox standardDeviationCheckBox;
+	protected JComboBox<String> sdComboBox;
 	
 	protected JComboBox<String> lookAndFeelComboBox;
 	
@@ -45,19 +44,21 @@ public class PreferencesWindow extends JPanel{
 	    // If you want the value to be committed on each keystroke instead of focus lost
 	    formatter.setCommitsOnValidEdit(true);
 	    
-	   this.standardDeviationCheckBox = new JCheckBox("Show Standard Deviation");
-		this.decimalPlatesTextField = new JFormattedTextField(formatter);
+	    this.decimalPlatesTextField = new JFormattedTextField(formatter);
 		this.lookAndFeelComboBox = new JComboBox<String>(getAvailableLookAndFeel());
+		this.sdComboBox = new JComboBox<String>(new String[]{"Yes", "No"});
 		
-		this.standardDeviationCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.decimalPlatesTextField.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.lookAndFeelComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		this.sdComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		add(new JLabel("Decimal Places"));
 		add(Box.createVerticalStrut(10));
 		add(decimalPlatesTextField);
 		add(Box.createVerticalStrut(10));
-		add(standardDeviationCheckBox);
+		add(new JLabel("Show Standard Deviation"));
+		add(Box.createVerticalStrut(10));
+		add(sdComboBox);
 		add(Box.createVerticalStrut(10));
 		add(new JLabel("Look and Feel"));
 		add(Box.createVerticalStrut(10));	
@@ -69,9 +70,9 @@ public class PreferencesWindow extends JPanel{
 				
 		// Load all settings and fresh the window
 		if (SettingsUtils.isStandardDeviationVisible()) {
-			this.standardDeviationCheckBox.setSelected(true);
+			this.sdComboBox.setSelectedItem("Yes");			
 		} else {
-			this.standardDeviationCheckBox.setSelected(false);
+			this.sdComboBox.setSelectedItem("No");
 		}
 		
 		this.decimalPlatesTextField.setText(String.valueOf(SettingsUtils.getDecimalPlaces()));
@@ -102,8 +103,13 @@ public class PreferencesWindow extends JPanel{
 	}
 	
 	public void save() {
-		SettingsUtils.setDecimalPlaces((Integer) decimalPlatesTextField.getValue());
-		SettingsUtils.setStandardDeviation(standardDeviationCheckBox.isSelected());
+		if(((String) sdComboBox.getSelectedItem()).equalsIgnoreCase("Yes")){
+			SettingsUtils.setStandardDeviation(true);
+		}else{
+			SettingsUtils.setStandardDeviation(false);
+		}
+		
+		SettingsUtils.setDecimalPlaces((Integer) decimalPlatesTextField.getValue());		
 		SettingsUtils.setLookAndFeel((String)lookAndFeelComboBox.getSelectedItem());
 	}	
 }
