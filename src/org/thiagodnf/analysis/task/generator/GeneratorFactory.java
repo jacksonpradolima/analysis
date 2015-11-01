@@ -17,6 +17,8 @@ public class GeneratorFactory {
 			return new QualityIndicatorsGenerator(parent, folders);
 		}else if (generatorName.equalsIgnoreCase(SummaryGenerator.class.getSimpleName())) {
 			return new SummaryGenerator(parent, folders);
+		}else if (generatorName.equalsIgnoreCase(MaxMinGenerator.class.getSimpleName())) {
+			return new MaxMinGenerator(parent, folders);
 		}
 		
 		return null;

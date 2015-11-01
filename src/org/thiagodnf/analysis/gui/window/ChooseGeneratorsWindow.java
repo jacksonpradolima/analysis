@@ -14,6 +14,7 @@ import javax.swing.SwingConstants;
 import org.thiagodnf.analysis.task.generator.AproxParetoFrontGenerator;
 import org.thiagodnf.analysis.task.generator.FUNALLGenerator;
 import org.thiagodnf.analysis.task.generator.KnownParetoFrontGenerator;
+import org.thiagodnf.analysis.task.generator.MaxMinGenerator;
 import org.thiagodnf.analysis.task.generator.QualityIndicatorsGenerator;
 import org.thiagodnf.analysis.task.generator.SummaryGenerator;
 
@@ -33,6 +34,8 @@ public class ChooseGeneratorsWindow extends JPanel{
 	
 	protected JCheckBox runSummaryGeneratorCheckBox;
 	
+	protected JCheckBox runMaxMinGeneratorCheckBox;
+	
 	public ChooseGeneratorsWindow(JFrame parent){
 		this.parent = parent;
 		
@@ -43,8 +46,11 @@ public class ChooseGeneratorsWindow extends JPanel{
 		this.runApproximateTrueParetoFrontGeneratorCheckBox = getNewJCheckBox("Approximate True Pareto-front");
 		this.runQualityIndicatorsGeneratorCheckBox = getNewJCheckBox("Quality Indicators");
 		this.runSummaryGeneratorCheckBox = getNewJCheckBox("Summary");
+		this.runMaxMinGeneratorCheckBox = getNewJCheckBox("Max Min");
 		
 		add(runFunAllGeneratorCheckBox);
+		add(Box.createVerticalStrut(10));
+		add(runMaxMinGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
 		add(runKnownParetoFrontGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
@@ -53,17 +59,6 @@ public class ChooseGeneratorsWindow extends JPanel{
 		add(runQualityIndicatorsGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
 		add(runSummaryGeneratorCheckBox);	
-		
-//		runAllCheckBox.addItemListener(new ItemListener() {
-//			// When the user selects this components
-//		    public void itemStateChanged(ItemEvent e) {
-//				for (Component c : getComponents()) {
-//					if (c != runAllCheckBox) {
-//						c.setEnabled(e.getStateChange() == 2);
-//					}
-//				}
-//		    }
-//		});
 	}
 	
 	protected JCheckBox getNewJCheckBox(String name) {
@@ -87,6 +82,9 @@ public class ChooseGeneratorsWindow extends JPanel{
 
 		if (this.runFunAllGeneratorCheckBox.isSelected()) {
 			generators.add(FUNALLGenerator.class.getSimpleName());
+		}
+		if (this.runMaxMinGeneratorCheckBox.isSelected()) {
+			generators.add(MaxMinGenerator.class.getSimpleName());
 		}
 		if (this.runKnownParetoFrontGeneratorCheckBox.isSelected()) {
 			generators.add(KnownParetoFrontGenerator.class.getSimpleName());
