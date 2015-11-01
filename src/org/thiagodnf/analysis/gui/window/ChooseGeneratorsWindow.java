@@ -46,15 +46,15 @@ public class ChooseGeneratorsWindow extends JPanel{
 		this.runApproximateTrueParetoFrontGeneratorCheckBox = getNewJCheckBox("Approximate True Pareto-front");
 		this.runQualityIndicatorsGeneratorCheckBox = getNewJCheckBox("Quality Indicators");
 		this.runSummaryGeneratorCheckBox = getNewJCheckBox("Summary");
-		this.runMaxMinGeneratorCheckBox = getNewJCheckBox("Max Min");
+		this.runMaxMinGeneratorCheckBox = getNewJCheckBox("Maximum and Minimum Values");
 		
 		add(runFunAllGeneratorCheckBox);
-		add(Box.createVerticalStrut(10));
-		add(runMaxMinGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
 		add(runKnownParetoFrontGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
 		add(runApproximateTrueParetoFrontGeneratorCheckBox);
+		add(Box.createVerticalStrut(10));
+		add(runMaxMinGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
 		add(runQualityIndicatorsGeneratorCheckBox);
 		add(Box.createVerticalStrut(10));
@@ -83,15 +83,15 @@ public class ChooseGeneratorsWindow extends JPanel{
 		if (this.runFunAllGeneratorCheckBox.isSelected()) {
 			generators.add(FUNALLGenerator.class.getSimpleName());
 		}
-		if (this.runMaxMinGeneratorCheckBox.isSelected()) {
-			generators.add(MaxMinGenerator.class.getSimpleName());
-		}
 		if (this.runKnownParetoFrontGeneratorCheckBox.isSelected()) {
 			generators.add(KnownParetoFrontGenerator.class.getSimpleName());
 		}
 		if (this.runApproximateTrueParetoFrontGeneratorCheckBox.isSelected()) {
 			generators.add(AproxParetoFrontGenerator.class.getSimpleName());
 		}
+		if (this.runMaxMinGeneratorCheckBox.isSelected()) {
+			generators.add(MaxMinGenerator.class.getSimpleName());
+		}		
 		if (this.runQualityIndicatorsGeneratorCheckBox.isSelected()) {
 			generators.add(QualityIndicatorsGenerator.class.getSimpleName());
 		}

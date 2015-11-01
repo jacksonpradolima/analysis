@@ -2,6 +2,8 @@ package org.thiagodnf.analysis.util;
 
 import java.util.prefs.Preferences;
 
+import org.thiagodnf.analysis.task.generator.MaxMinGenerator;
+
 /**
  * Settings Utils Class is responsible for save
  * all program settings used by user.
@@ -54,5 +56,23 @@ public class SettingsUtils {
 	
 	public static String getLookAndFeel() {
 		return getValue("look-and-feel", "javax.swing.plaf.nimbus.NimbusLookAndFeel");
+	}
+
+	public static void setMaxMinValues(int value) {
+		setValue("normalize-hypervolume", String.valueOf(value));
+	}
+	
+	public static int getMaxMinValues() {
+		String value = getValue("normalize-hypervolume", "1");
+		
+		if (value.equalsIgnoreCase("1")) {
+			return MaxMinGenerator.DEFAULT;
+		} else if (value.equalsIgnoreCase("2")) {
+			return MaxMinGenerator.MAXMIN;
+		} else if (value.equalsIgnoreCase("3")) {
+			return MaxMinGenerator.NORMALIZED;
+		}
+		
+		return 0;
 	}
 }

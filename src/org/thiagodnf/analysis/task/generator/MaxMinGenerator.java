@@ -30,11 +30,65 @@ public class MaxMinGenerator extends Generator {
 	
 	protected final static Logger logger = LoggerUtils.getLogger(MaxMinGenerator.class.getName());
 	
+	public static final int DEFAULT = 1;
+	
+	public static final int MAXMIN = 2;
+	
+	public static final int NORMALIZED = 3;
+	
 	public MaxMinGenerator(JFrame parent, File[] folders) {
 		super(parent, folders);
 	}
 	
 	protected Void doInBackground() throws Exception {
+		generateMaxMinForEachFunFiles();
+		generateMaxMinForEachPFAPPROXFiles();
+		
+		return null;
+	}
+	
+	protected Void generateMaxMinForEachPFAPPROXFiles() throws Exception {
+	
+		List<String> files = getFilesStartingWith(folders, "PFAPROX");
+		
+		logger.info(files.size() + " has been found");
+
+		updateMaximum(files.size());
+
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+
+		for (String filename : files) {
+			updateNote("Sorting files " + getCurrentProgress() + " from " + files.size());
+
+			String key = FilenameUtils.getFullPath(filename);
+
+			if (!map.containsKey(key)) {
+				map.put(key, new ArrayList<String>());
+			}
+
+			map.get(key).add(filename);
+
+			updateProgress();
+		}
+		
+		updateMaximum(files.size());
+		
+		for (Entry<String, List<String>> entry : map.entrySet()) {
+			File[] f = new File[]{new File(entry.getKey())};
+			
+			List<String> maxMinFiles = getFilesStartingWith(f, "MAXMIN");
+			
+			generate(entry.getKey(), maxMinFiles, "_PFAPROX");
+		}
+		
+		afterFinishing();
+		
+		logger.info("Done");
+		
+		return null;
+	}
+	
+	protected Void generateMaxMinForEachFunFiles() throws Exception {
 		
 		List<String> files = getFilesStartingWith(folders, "FUN_");
 		
@@ -61,7 +115,7 @@ public class MaxMinGenerator extends Generator {
 		updateMaximum(files.size());
 		
 		for (Entry<String, List<String>> entry : map.entrySet()) {
-			generate(entry.getKey(), entry.getValue());
+			generate(entry.getKey(), entry.getValue(), "");
 		}
 		
 		afterFinishing();
@@ -71,7 +125,7 @@ public class MaxMinGenerator extends Generator {
 		return null;
 	}
 	
-	protected void generate(String folder, List<String> files) throws Exception {
+	protected void generate(String folder, List<String> files, String suffix) throws Exception {
 		
 		Preconditions.checkNotNull(folder, "Folder cannot be null");
 		Preconditions.checkArgument(!folder.isEmpty(), "Folder cannot be empty");
@@ -119,7 +173,7 @@ public class MaxMinGenerator extends Generator {
 
 		logger.info("Saving the MAXMIN file");
 
-		maxMinValues.printObjectivesToFile(folder + File.separator + "MAXMIN");
+		maxMinValues.printObjectivesToFile(folder + File.separator + "MAXMIN"+suffix);
 	}
 	
 	@Override

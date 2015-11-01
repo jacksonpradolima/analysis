@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
-
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.util.Ranking;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
 
 /**
  * SolutionSet Utils Class
@@ -20,6 +20,10 @@ import jmetal.util.Ranking;
  */
 public class SolutionSetUtils {
 
+	public static SolutionSet getFromFile(File filename) {
+		return getFromFile(filename.getAbsolutePath());
+	}
+	
 	public static SolutionSet getFromFile(String filename) {
 		SolutionSet population = new SolutionSet(Integer.MAX_VALUE);
 
@@ -153,5 +157,20 @@ public class SolutionSetUtils {
 		}
 
 		return same;
+	}
+	
+	public static int getNumberOfObjectives(SolutionSet population){
+		int numberOfObjectives = -1;
+		
+		for (int i = 0; i < population.size(); i++) {
+			if (numberOfObjectives == -1) {
+				numberOfObjectives = population.get(i).getNumberOfObjectives();
+			}
+			if (numberOfObjectives != population.get(i).getNumberOfObjectives()) {
+				throw new IllegalArgumentException("The number of objectives is diferent");
+			}
+		}
+		
+		return numberOfObjectives;
 	}
 }
