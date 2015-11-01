@@ -32,7 +32,7 @@ public class PreferencesWindow extends JPanel{
 	
 	protected JComboBox<String> lookAndFeelComboBox;
 	
-	protected JComboBox<String> normalizedComboBox;
+	protected JComboBox<String> normalizeHypervolumeComboBox;
 	
 	public PreferencesWindow(JFrame parent){
 		this.parent = parent;
@@ -50,12 +50,12 @@ public class PreferencesWindow extends JPanel{
 	    this.decimalPlatesTextField = new JFormattedTextField(formatter);
 		this.lookAndFeelComboBox = new JComboBox<String>(getAvailableLookAndFeel());
 		this.sdComboBox = new JComboBox<String>(new String[]{"Yes", "No"});
-		this.normalizedComboBox = new JComboBox<String>(new String[]{"Using Default JMetal", "Using Max and Min Generated Values", "Using 0.0 and 1.01 values"});
+		this.normalizeHypervolumeComboBox = new JComboBox<String>(new String[]{"Using Default JMetal", "Using Max and Min Generated Values", "Using 0.0 and 1.01 values"});
 		
 		this.decimalPlatesTextField.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.lookAndFeelComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.sdComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-		this.normalizedComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		this.normalizeHypervolumeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		add(new JLabel("Decimal Places"));
 		add(Box.createVerticalStrut(10));
@@ -67,7 +67,7 @@ public class PreferencesWindow extends JPanel{
 		add(Box.createVerticalStrut(10));
 		add(new JLabel("Normalize Hypervolume"));
 		add(Box.createVerticalStrut(10));
-		add(normalizedComboBox);
+		add(normalizeHypervolumeComboBox);
 		add(Box.createVerticalStrut(10));
 		add(new JLabel("Look and Feel"));
 		add(Box.createVerticalStrut(10));	
@@ -85,11 +85,11 @@ public class PreferencesWindow extends JPanel{
 		}
 		
 		if(SettingsUtils.getMaxMinValues() == MaxMinGenerator.DEFAULT){
-			this.normalizedComboBox.setSelectedIndex(0);
+			this.normalizeHypervolumeComboBox.setSelectedIndex(0);
 		}else if(SettingsUtils.getMaxMinValues() == MaxMinGenerator.MAXMIN){
-			this.normalizedComboBox.setSelectedIndex(1);
+			this.normalizeHypervolumeComboBox.setSelectedIndex(1);
 		}else if(SettingsUtils.getMaxMinValues() == MaxMinGenerator.NORMALIZED){
-			this.normalizedComboBox.setSelectedIndex(2);
+			this.normalizeHypervolumeComboBox.setSelectedIndex(2);
 		}
 		
 		this.decimalPlatesTextField.setText(String.valueOf(SettingsUtils.getDecimalPlaces()));
@@ -126,11 +126,11 @@ public class PreferencesWindow extends JPanel{
 			SettingsUtils.setStandardDeviation(false);
 		}
 		
-		if(normalizedComboBox.getSelectedIndex() == 0){
+		if(normalizeHypervolumeComboBox.getSelectedIndex() == 0){
 			SettingsUtils.setMaxMinValues(MaxMinGenerator.DEFAULT);
-		}else if(normalizedComboBox.getSelectedIndex() == 1){
+		}else if(normalizeHypervolumeComboBox.getSelectedIndex() == 1){
 			SettingsUtils.setMaxMinValues(MaxMinGenerator.MAXMIN);
-		} else if(normalizedComboBox.getSelectedIndex() == 2){
+		} else if(normalizeHypervolumeComboBox.getSelectedIndex() == 2){
 			SettingsUtils.setMaxMinValues(MaxMinGenerator.NORMALIZED);
 		}			
 		
