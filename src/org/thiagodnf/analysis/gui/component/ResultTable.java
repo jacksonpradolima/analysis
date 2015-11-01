@@ -10,8 +10,6 @@ import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -209,5 +207,9 @@ public class ResultTable extends JTable{
 		}
 
 		return files;
+	}
+	
+	public File getDirectory(){
+		return this.directory;
 	}
 }

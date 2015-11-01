@@ -17,6 +17,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
 import org.thiagodnf.analysis.gui.action.DoAboutAction;
+import org.thiagodnf.analysis.gui.action.DoExportAction;
 import org.thiagodnf.analysis.gui.action.DoFilterAction;
 import org.thiagodnf.analysis.gui.action.DoGeneratorAction;
 import org.thiagodnf.analysis.gui.action.DoOpenFoldersAction;
@@ -79,6 +80,8 @@ public class MainWindow extends JFrame {
 		toolBar.addSeparator();
 		toolBar.add(getNewToolBarButton("Search", "search.png", new DoSearchAction(this)));
 		toolBar.add(getNewToolBarButton("Filter", "filter.png", new DoFilterAction(this)));
+		toolBar.addSeparator();
+		toolBar.add(getNewToolBarButton("Export", "export.png", new DoExportAction(this)));
 		toolBar.addSeparator();
 		toolBar.add(getNewToolBarButton("Settings", "gear.png", new DoPreferencesAction(this)));
 		toolBar.addSeparator();
