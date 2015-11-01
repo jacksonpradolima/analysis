@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
+import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 import org.thiagodnf.analysis.task.AsyncTask;
 import org.thiagodnf.analysis.util.LoggerUtils;
@@ -44,6 +45,7 @@ public abstract class Generator extends AsyncTask {
 
 			if (pendingGenerator.isEmpty()) {
 				MessageBoxWindow.info(parent, "Done");
+				((MainWindow) parent).getResultTable().reload();
 			} else {
 				Generator gen = pendingGenerator.remove(0);
 				gen.setPendingGenerator(pendingGenerator);
