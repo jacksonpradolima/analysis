@@ -4,6 +4,16 @@ import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class is used to compare values at result table. You can to send a
+ * simple double value in string format or send two double value where the
+ * second one is a standard deviation. For example, a single value is formated
+ * as "2.4" and the second option is you use "2.4 (3)" using parenthesis.
+ * 
+ * @author Thiago Nascimento
+ * @since 2015-10-27
+ * @version 1.0.0
+ */
 public class DoubleComparator implements Comparator<String> {
 
 	@Override
