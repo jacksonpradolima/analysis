@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 import org.thiagodnf.analysis.task.AsyncTask;
 import org.thiagodnf.analysis.util.LoggerUtils;
 import org.thiagodnf.core.util.FilesUtils;
@@ -44,7 +44,7 @@ public abstract class Generator extends AsyncTask {
 			get();
 
 			if (pendingGenerator.isEmpty()) {
-				MessageBoxWindow.info(parent, "Done");
+				MessageBox.info(parent, "Done");
 				((MainWindow) parent).getResultTable().reload();
 			} else {
 				Generator gen = pendingGenerator.remove(0);
@@ -55,7 +55,7 @@ public abstract class Generator extends AsyncTask {
 			if (!(e instanceof CancellationException)) {
 				e.getCause().printStackTrace();
 				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
-				MessageBoxWindow.error(parent, msg);
+				MessageBox.error(parent, msg);
 			}
 		}
 	}

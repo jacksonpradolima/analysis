@@ -16,7 +16,7 @@ import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.commons.io.FilenameUtils;
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 
 public class FolderTree extends JTree implements TreeSelectionListener{
 
@@ -62,7 +62,7 @@ public class FolderTree extends JTree implements TreeSelectionListener{
 		try {
 			((MainWindow) parent).getResultTable().load(new File(directory));
 		} catch (IOException ex) {
-			MessageBoxWindow.error(parent, ex.getMessage());
+			MessageBox.error(parent, ex.getMessage());
 			ex.printStackTrace();
 		}	
 	}

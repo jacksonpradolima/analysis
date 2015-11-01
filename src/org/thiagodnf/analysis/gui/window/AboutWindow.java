@@ -52,7 +52,7 @@ public class AboutWindow extends JPanel{
 						Desktop.getDesktop().browse(new URI(url));
 					}
 				} catch (URISyntaxException | IOException ex) {
-					MessageBoxWindow.error(null, "Error in opening browser" + ":\n" + ex.getLocalizedMessage());
+					MessageBox.error(null, "Error in opening browser" + ":\n" + ex.getLocalizedMessage());
 					ex.printStackTrace();
 				}
 			}

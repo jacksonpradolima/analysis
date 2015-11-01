@@ -13,7 +13,7 @@ import jmetal.core.SolutionSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 import org.thiagodnf.analysis.util.SolutionSetUtils;
 import org.thiagodnf.core.util.FilesUtils;
 
@@ -78,12 +78,12 @@ public class ExportFromFUNALLToGnuplotTask extends AsyncTask {
 	protected void done() {
 		try {
 			get();
-			MessageBoxWindow.info(parent, "Done");			
+			MessageBox.info(parent, "Done");			
 		} catch (Exception e) {
 			if (!(e instanceof CancellationException)) {
 				e.getCause().printStackTrace();
 				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
-				MessageBoxWindow.error(parent, msg);
+				MessageBox.error(parent, msg);
 			}
 		}
 	}

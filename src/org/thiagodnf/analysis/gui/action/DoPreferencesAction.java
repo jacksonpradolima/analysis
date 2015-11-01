@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 import org.thiagodnf.analysis.gui.window.PreferencesWindow;
 import org.thiagodnf.analysis.util.SettingsUtils;
 
@@ -42,7 +42,7 @@ public class DoPreferencesAction extends AbstractAction {
 			
 				((MainWindow) parent).getResultTable().reload();
 			} catch (Exception ex) {
-				MessageBoxWindow.error(parent, ex.getMessage());
+				MessageBox.error(parent, ex.getMessage());
 				ex.printStackTrace();
 			}
 		}

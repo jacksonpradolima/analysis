@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 
 public class DoFilterAction extends AbstractAction {
 
@@ -50,7 +50,7 @@ public class DoFilterAction extends AbstractAction {
 			
 			window.getResultTable().reload();
 		}catch(Exception ex){
-			MessageBoxWindow.error(parent, ex.getMessage());
+			MessageBox.error(parent, ex.getMessage());
 			ex.printStackTrace();
 		}
 	}

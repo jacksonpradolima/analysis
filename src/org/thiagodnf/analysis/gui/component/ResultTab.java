@@ -18,7 +18,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.thiagodnf.analysis.custom.DoubleComparator;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 import org.thiagodnf.analysis.indicator.EpsilonIndicator;
 import org.thiagodnf.analysis.indicator.GDIndicator;
 import org.thiagodnf.analysis.indicator.HypervolumeIndicator;
@@ -116,7 +116,7 @@ public class ResultTab extends Panel{
 		try {
 			load();
 		} catch (Exception ex) {
-			MessageBoxWindow.error(parent, ex.getClass().getName());
+			MessageBox.error(parent, ex.getClass().getName());
 			ex.printStackTrace();
 		}
 	}

@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 import org.thiagodnf.analysis.task.AsyncTask;
 import org.thiagodnf.analysis.task.ExportFromFUNALLToGnuplotTask;
 
@@ -68,7 +68,7 @@ public class DoExportAction extends AbstractAction {
 				}
 			}			
 		}catch(Exception ex){
-			MessageBoxWindow.error(parent, ex.getMessage());
+			MessageBox.error(parent, ex.getMessage());
 			ex.printStackTrace();
 		}
 	}

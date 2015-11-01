@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 
 public class DoSearchAction extends AbstractAction {
 
@@ -35,7 +35,7 @@ public class DoSearchAction extends AbstractAction {
 				}
 	
 				if (term.isEmpty()) {
-					MessageBoxWindow.warning(parent, "You must to define a term.");
+					MessageBox.warning(parent, "You must to define a term.");
 				}
 			}
 			
@@ -64,7 +64,7 @@ public class DoSearchAction extends AbstractAction {
 			// copy the table's content 
 			window.getResultTable().requestFocus();
 		}catch(Exception ex){
-			MessageBoxWindow.error(parent, ex.getMessage());
+			MessageBox.error(parent, ex.getMessage());
 			ex.printStackTrace();
 		}
 	}

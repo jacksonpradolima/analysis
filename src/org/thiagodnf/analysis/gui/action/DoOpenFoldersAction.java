@@ -8,7 +8,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 
 public class DoOpenFoldersAction extends AbstractAction {
 
@@ -40,7 +40,7 @@ public class DoOpenFoldersAction extends AbstractAction {
 			try {
 				((MainWindow) parent).openFolder();
 			} catch (Exception ex) {
-				MessageBoxWindow.error(parent, ex.getMessage());
+				MessageBox.error(parent, ex.getMessage());
 				ex.printStackTrace();
 			}
 		}

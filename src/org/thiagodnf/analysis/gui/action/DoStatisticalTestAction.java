@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
+import org.thiagodnf.analysis.gui.window.MessageBox;
 import org.thiagodnf.analysis.gui.window.StatisticalTestWindow;
 import org.thiagodnf.analysis.indicator.Indicator;
 import org.thiagodnf.analysis.util.IndicatorUtils;
@@ -61,7 +61,7 @@ public class DoStatisticalTestAction extends AbstractAction {
 			StatisticalTestWindow w = new StatisticalTestWindow(parent, indicator, folderName, files);
 			w.showOptionDialog();
 		}catch(Exception ex){
-			MessageBoxWindow.error(parent, ex.getMessage());
+			MessageBox.error(parent, ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
