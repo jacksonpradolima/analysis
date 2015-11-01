@@ -9,17 +9,17 @@ import javax.swing.JOptionPane;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
-import org.thiagodnf.analysis.gui.window.ViewDetailsWindow;
+import org.thiagodnf.analysis.gui.window.StatisticalTestWindow;
 import org.thiagodnf.analysis.indicator.Indicator;
 import org.thiagodnf.analysis.util.IndicatorUtils;
 
-public class ViewDetailsAction extends AbstractAction {
+public class DoStatisticalTestAction extends AbstractAction {
 
 	private static final long serialVersionUID = -2332276187918581439L;
 	
 	protected JFrame parent;
 	
-	public ViewDetailsAction(JFrame parent){
+	public DoStatisticalTestAction(JFrame parent){
 		this.parent = parent;
 	}
 
@@ -58,7 +58,7 @@ public class ViewDetailsAction extends AbstractAction {
 			
 			List<String> files = window.getResultTable().getSelectedFolderFiles();
 			
-			ViewDetailsWindow w = new ViewDetailsWindow(parent, indicator, folderName, files);
+			StatisticalTestWindow w = new StatisticalTestWindow(parent, indicator, folderName, files);
 			w.showOptionDialog();
 		}catch(Exception ex){
 			MessageBoxWindow.error(parent, ex.getMessage());

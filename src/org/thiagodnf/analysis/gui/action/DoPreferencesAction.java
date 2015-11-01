@@ -13,13 +13,13 @@ import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 import org.thiagodnf.analysis.gui.window.PreferencesWindow;
 import org.thiagodnf.analysis.util.SettingsUtils;
 
-public class PreferencesAction extends AbstractAction {
+public class DoPreferencesAction extends AbstractAction {
 
 	private static final long serialVersionUID = -2332276187918581439L;
 	
 	protected JFrame parent;
 	
-	public PreferencesAction(JFrame parent){
+	public DoPreferencesAction(JFrame parent){
 		this.parent = parent;
 	}
 

@@ -10,13 +10,13 @@ import javax.swing.ListSelectionModel;
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 
-public class SearchAction extends AbstractAction {
+public class DoSearchAction extends AbstractAction {
 
 	private static final long serialVersionUID = -2332276187918581439L;
 	
 	protected JFrame parent;
 	
-	public SearchAction(JFrame parent){
+	public DoSearchAction(JFrame parent){
 		this.parent = parent;
 	}
 

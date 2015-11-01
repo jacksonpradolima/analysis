@@ -10,13 +10,13 @@ import javax.swing.JFrame;
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 
-public class OpenFoldersAction extends AbstractAction {
+public class DoOpenFoldersAction extends AbstractAction {
 
 	private static final long serialVersionUID = -2332276187918581439L;
 	
 	protected JFrame parent;
 	
-	public OpenFoldersAction(JFrame parent){
+	public DoOpenFoldersAction(JFrame parent){
 		this.parent = parent;
 	}
 

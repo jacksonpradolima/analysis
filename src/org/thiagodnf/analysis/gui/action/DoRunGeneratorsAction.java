@@ -14,13 +14,13 @@ import org.thiagodnf.analysis.gui.window.ChooseGeneratorsWindow;
 import org.thiagodnf.analysis.task.generator.Generator;
 import org.thiagodnf.analysis.task.generator.GeneratorFactory;
 
-public class RunGeneratorsAction extends AbstractAction {
+public class DoRunGeneratorsAction extends AbstractAction {
 
 	private static final long serialVersionUID = -2332276187918581439L;
 	
 	protected JFrame parent;
 	
-	public RunGeneratorsAction(JFrame parent){
+	public DoRunGeneratorsAction(JFrame parent){
 		this.parent = parent;
 	}
 

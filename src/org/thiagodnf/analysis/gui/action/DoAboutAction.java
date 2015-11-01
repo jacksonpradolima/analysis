@@ -7,13 +7,13 @@ import javax.swing.JFrame;
 
 import org.thiagodnf.analysis.gui.window.AboutWindow;
 
-public class AboutAction extends AbstractAction {
+public class DoAboutAction extends AbstractAction {
 
 	private static final long serialVersionUID = -2332276187918581439L;
 	
 	protected JFrame parent;
 	
-	public AboutAction(JFrame parent){
+	public DoAboutAction(JFrame parent){
 		this.parent = parent;
 	}
 
