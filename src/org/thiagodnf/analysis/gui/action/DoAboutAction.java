@@ -5,8 +5,7 @@ import javax.swing.JFrame;
 import org.thiagodnf.analysis.gui.window.AboutWindow;
 
 /**
- * This class is used to show a window to user with
- * informations about this tool
+ * This class is used to show a window to user with informations about this tool
  * 
  * @author Thiago Nascimento
  * @since 2015-10-27
