@@ -9,13 +9,13 @@ import javax.swing.JOptionPane;
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBoxWindow;
 
-public class FilterAction extends AbstractAction {
+public class DoFilterAction extends AbstractAction {
 
 	private static final long serialVersionUID = -2332276187918581439L;
 	
 	protected JFrame parent;
 	
-	public FilterAction(JFrame parent){
+	public DoFilterAction(JFrame parent){
 		this.parent = parent;
 	}
 

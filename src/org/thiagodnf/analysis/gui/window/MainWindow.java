@@ -16,14 +16,14 @@ import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
-import org.thiagodnf.analysis.gui.action.AboutAction;
-import org.thiagodnf.analysis.gui.action.FilterAction;
-import org.thiagodnf.analysis.gui.action.OpenFoldersAction;
-import org.thiagodnf.analysis.gui.action.PreferencesAction;
-import org.thiagodnf.analysis.gui.action.RunGeneratorsAction;
-import org.thiagodnf.analysis.gui.action.SearchAction;
-import org.thiagodnf.analysis.gui.action.StatisticalTestAction;
-import org.thiagodnf.analysis.gui.action.ViewDetailsAction;
+import org.thiagodnf.analysis.gui.action.DoAboutAction;
+import org.thiagodnf.analysis.gui.action.DoFilterAction;
+import org.thiagodnf.analysis.gui.action.DoOpenFoldersAction;
+import org.thiagodnf.analysis.gui.action.DoPreferencesAction;
+import org.thiagodnf.analysis.gui.action.DoGeneratorAction;
+import org.thiagodnf.analysis.gui.action.DoSearchAction;
+import org.thiagodnf.analysis.gui.action.DoStatisticalTestAction;
+import org.thiagodnf.analysis.gui.action.DoViewDetailsAction;
 import org.thiagodnf.analysis.gui.component.FolderTree;
 import org.thiagodnf.analysis.gui.component.ResultTable;
 import org.thiagodnf.core.util.ImageUtils;
@@ -69,18 +69,18 @@ public class MainWindow extends JFrame {
 		//The user cannot move the toolbar. The toolbar is fixed at top
 		toolBar.setFloatable(false);
 		
-		toolBar.add(getNewToolBarButton("Open","folder.png", new OpenFoldersAction(this)));
+		toolBar.add(getNewToolBarButton("Open","folder.png", new DoOpenFoldersAction(this)));
 		toolBar.addSeparator();
-		toolBar.add(getNewToolBarButton("Generator", "design.png", new RunGeneratorsAction(this)));
-		toolBar.add(getNewToolBarButton("View Details", "inbox.png", new ViewDetailsAction(this)));
-		toolBar.add(getNewToolBarButton("Statistical Test", "statistics.png", new StatisticalTestAction(this)));		
+		toolBar.add(getNewToolBarButton("Generator", "design.png", new DoGeneratorAction(this)));
+		toolBar.add(getNewToolBarButton("View Details", "inbox.png", new DoViewDetailsAction(this)));
+		toolBar.add(getNewToolBarButton("Statistical Test", "statistics.png", new DoStatisticalTestAction(this)));		
 		toolBar.addSeparator();
-		toolBar.add(getNewToolBarButton("Search", "search.png", new SearchAction(this)));
-		toolBar.add(getNewToolBarButton("Filter", "filter.png", new FilterAction(this)));
+		toolBar.add(getNewToolBarButton("Search", "search.png", new DoSearchAction(this)));
+		toolBar.add(getNewToolBarButton("Filter", "filter.png", new DoFilterAction(this)));
 		toolBar.addSeparator();
-		toolBar.add(getNewToolBarButton("Settings", "gear.png", new PreferencesAction(this)));
+		toolBar.add(getNewToolBarButton("Settings", "gear.png", new DoPreferencesAction(this)));
 		toolBar.addSeparator();
-		toolBar.add(getNewToolBarButton("About", "info.png", new AboutAction(this)));
+		toolBar.add(getNewToolBarButton("About", "info.png", new DoAboutAction(this)));
 		
 		// Add toolbar at window
 		add(toolBar, BorderLayout.NORTH);
