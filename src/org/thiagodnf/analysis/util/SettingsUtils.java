@@ -34,8 +34,12 @@ public class SettingsUtils {
 		return Integer.valueOf(getValue("decimal-places", "5"));
 	}
 	
-	public static void setDecimalPlaces(int value) {
-		setValue("decimal-places", String.valueOf(value));
+	public static void setDecimalPlaces(String value) {
+		setValue("decimal-places", value);
+	}
+	
+	public static String[] getAvailableDecimalPlaces(){
+		return new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 	}
 
 	public static void setStandardDeviation(boolean value) {

@@ -1,32 +1,22 @@
 package org.thiagodnf.analysis.gui.window;
 
 import java.awt.Component;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.text.NumberFormatter;
 
 import org.thiagodnf.analysis.task.generator.MaxMinGenerator;
+import org.thiagodnf.analysis.util.LookAndFeelUtils;
 import org.thiagodnf.analysis.util.SettingsUtils;
 
-public class PreferencesWindow extends JPanel{
+public class PreferencesWindow extends DialogWindow{
 
 	private static final long serialVersionUID = -2819220375520561750L;
 	
-	protected JFrame parent;
-	
-	protected JFormattedTextField decimalPlatesTextField;
+	protected JComboBox<String> decimalPlatesComboBox ;
 	
 	protected JComboBox<String> sdComboBox;
 	
@@ -34,32 +24,22 @@ public class PreferencesWindow extends JPanel{
 	
 	protected JComboBox<String> normalizeHypervolumeComboBox;
 	
-	public PreferencesWindow(JFrame parent){
-		this.parent = parent;
+	public PreferencesWindow(JFrame parent) {
+		super(parent, "Preferences", JOptionPane.OK_CANCEL_OPTION);
 		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-				
-		NumberFormat format = NumberFormat.getNumberInstance();
-	    NumberFormatter formatter = new NumberFormatter(format);
-	    formatter.setValueClass(Integer.class);
-	    formatter.setMinimum(1);
-	    formatter.setMaximum(10);
-	    // If you want the value to be committed on each keystroke instead of focus lost
-	    formatter.setCommitsOnValidEdit(true);
-	    
-	    this.decimalPlatesTextField = new JFormattedTextField(formatter);
-		this.lookAndFeelComboBox = new JComboBox<String>(getAvailableLookAndFeel());
+		this.decimalPlatesComboBox = new JComboBox<String>(SettingsUtils.getAvailableDecimalPlaces());
+		this.lookAndFeelComboBox = new JComboBox<String>(LookAndFeelUtils.getAvailableLookAndFeel());
 		this.sdComboBox = new JComboBox<String>(new String[]{"Yes", "No"});
 		this.normalizeHypervolumeComboBox = new JComboBox<String>(new String[]{"Using Default JMetal", "Using Max and Min Generated Values", "Using 0.0 and 1.01 values"});
 		
-		this.decimalPlatesTextField.setAlignmentX(Component.LEFT_ALIGNMENT);
+		this.decimalPlatesComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.lookAndFeelComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.sdComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.normalizeHypervolumeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		add(new JLabel("Decimal Places"));
 		add(Box.createVerticalStrut(10));
-		add(decimalPlatesTextField);
+		add(decimalPlatesComboBox);
 		add(Box.createVerticalStrut(10));
 		add(new JLabel("Show Standard Deviation"));
 		add(Box.createVerticalStrut(10));
@@ -76,7 +56,6 @@ public class PreferencesWindow extends JPanel{
 		// Select on combo the saved look and feel
 		this.lookAndFeelComboBox.setSelectedItem(SettingsUtils.getLookAndFeel());
 				
-				
 		// Load all settings and fresh the window
 		if (SettingsUtils.isStandardDeviationVisible()) {
 			this.sdComboBox.setSelectedItem("Yes");			
@@ -92,49 +71,25 @@ public class PreferencesWindow extends JPanel{
 			this.normalizeHypervolumeComboBox.setSelectedIndex(2);
 		}
 		
-		this.decimalPlatesTextField.setText(String.valueOf(SettingsUtils.getDecimalPlaces()));
+		this.decimalPlatesComboBox.setSelectedItem(String.valueOf(SettingsUtils.getDecimalPlaces()));
 	}
 		
-	private String[] getAvailableLookAndFeel() {
-		List<String> lookAndFeels = new ArrayList<String>();
-		
-		try {
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				lookAndFeels.add(info.getClassName());
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		
-		return lookAndFeels.toArray(new String[lookAndFeels.size()]);
-	}
-
-	public int showOptionDialog(){
-		Object[] options = { "Save", "Cancel" };
-
-		String title = "Preferences";
-		int optionType = JOptionPane.YES_NO_CANCEL_OPTION;
-		int messageType = JOptionPane.PLAIN_MESSAGE;
-
-		return JOptionPane.showOptionDialog(parent, this, title, optionType, messageType, null, options, null);
-	}
-	
 	public void save() {
-		if(((String) sdComboBox.getSelectedItem()).equalsIgnoreCase("Yes")){
+		if (((String) sdComboBox.getSelectedItem()).equalsIgnoreCase("Yes")) {
 			SettingsUtils.setStandardDeviation(true);
-		}else{
+		} else {
 			SettingsUtils.setStandardDeviation(false);
 		}
-		
-		if(normalizeHypervolumeComboBox.getSelectedIndex() == 0){
+
+		if (normalizeHypervolumeComboBox.getSelectedIndex() == 0) {
 			SettingsUtils.setMaxMinValues(MaxMinGenerator.DEFAULT);
-		}else if(normalizeHypervolumeComboBox.getSelectedIndex() == 1){
+		} else if (normalizeHypervolumeComboBox.getSelectedIndex() == 1) {
 			SettingsUtils.setMaxMinValues(MaxMinGenerator.MAXMIN);
-		} else if(normalizeHypervolumeComboBox.getSelectedIndex() == 2){
+		} else if (normalizeHypervolumeComboBox.getSelectedIndex() == 2) {
 			SettingsUtils.setMaxMinValues(MaxMinGenerator.NORMALIZED);
-		}			
+		}		
 		
-		SettingsUtils.setDecimalPlaces((Integer) decimalPlatesTextField.getValue());		
+		SettingsUtils.setDecimalPlaces((String) decimalPlatesComboBox.getSelectedItem());		
 		SettingsUtils.setLookAndFeel((String)lookAndFeelComboBox.getSelectedItem());
 	}	
 }
