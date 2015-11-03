@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 
 import jmetal.core.SolutionSet;
 
-import org.apache.commons.io.FilenameUtils;
 import org.thiagodnf.analysis.util.LoggerUtils;
 import org.thiagodnf.analysis.util.SolutionSetUtils;
 
@@ -60,7 +59,7 @@ public abstract class ParetoFrontGenerator extends Generator {
 		for (String file : files) {
 			updateNote(getCurrentProgress() + " from " + totalOfFiles);
 			
-			logger.info("Reading the fun file: " + FilenameUtils.getName(file));
+			logger.info("Reading the fun file: " + file);
 
 			SolutionSet fun = SolutionSetUtils.getFromFile(file);
 
