@@ -20,7 +20,7 @@ public class FUNALLGenerator extends ParetoFrontGenerator {
 	protected final static Logger logger = LoggerUtils.getLogger(FUNALLGenerator.class.getName());
 	
 	public FUNALLGenerator(JFrame parent, File[] folders) {
-		super(parent, folders, "FUN_", "/FUNALL", "ALL");
+		super(parent, folders, "FUN_", File.separator+"FUNALL", "ALL");
 	}
 	
 	@Override

@@ -32,7 +32,7 @@ public class TimeIndicator extends Indicator{
 		
 		int id = Integer.valueOf(split[1]);
 		
-		String timePath = fullpath + "/TIME_" + id;
+		String timePath = fullpath + File.separator + "TIME_" + id;
 
 		if (!new File(timePath).exists()) {
 			return 0;

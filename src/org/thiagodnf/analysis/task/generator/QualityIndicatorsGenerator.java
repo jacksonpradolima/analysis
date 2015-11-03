@@ -83,7 +83,7 @@ public class QualityIndicatorsGenerator extends Generator {
 			parent = parent.getParentFile();
 		}
 		
-		String approxTrueParetoFrontPath = parent.getAbsolutePath() + "/PFAPROX";
+		String approxTrueParetoFrontPath = parent.getAbsolutePath() + File.separator+"PFAPROX";
 		
 		if (!new File(approxTrueParetoFrontPath).exists()) {
 			throw new Exception("You must to define a true Pareto-front before");
@@ -125,7 +125,7 @@ public class QualityIndicatorsGenerator extends Generator {
 		
 		String filename = FilenameUtils.getBaseName(file);
 
-		String outputFile = folder + "/QI_" + filename;
+		String outputFile = folder + File.separator+"QI_" + filename;
 
 		PropertiesUtils.save(new File(outputFile), values);
 

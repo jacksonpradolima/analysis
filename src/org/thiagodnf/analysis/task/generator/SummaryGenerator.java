@@ -114,7 +114,7 @@ public class SummaryGenerator extends Generator{
 			addMetric(output, indicador, stats);
 		}
 		
-		PropertiesUtils.save(new File(folder + "/SUMMARY"), output);
+		PropertiesUtils.save(new File(folder + File.separator+"SUMMARY"), output);
 	}
 	
 	protected void addMetric(Properties prop, String prefix, DescriptiveStatistics stats) {

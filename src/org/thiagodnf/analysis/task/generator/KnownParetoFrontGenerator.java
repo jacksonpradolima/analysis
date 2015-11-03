@@ -18,7 +18,7 @@ public class KnownParetoFrontGenerator extends ParetoFrontGenerator {
 	protected final static Logger logger = LoggerUtils.getLogger(KnownParetoFrontGenerator.class.getName());
 	
 	public KnownParetoFrontGenerator(JFrame parent, File[] folders) {
-		super(parent, folders, "FUNALL", "/PFKNOWN", null);
+		super(parent, folders, "FUNALL", File.separator+"PFKNOWN", null);
 	}	
 
 	@Override

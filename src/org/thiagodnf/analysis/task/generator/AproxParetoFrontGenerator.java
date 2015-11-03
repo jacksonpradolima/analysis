@@ -20,7 +20,7 @@ public class AproxParetoFrontGenerator extends ParetoFrontGenerator {
 	protected final static Logger logger = LoggerUtils.getLogger(AproxParetoFrontGenerator.class.getName());
 
 	public AproxParetoFrontGenerator(JFrame parent, File[] folders) {
-		super(parent, folders, "PFKNOWN", "/PFAPROX", null);
+		super(parent, folders, "PFKNOWN", File.separator+"PFAPROX", null);
 	}
 
 	public String toString() {

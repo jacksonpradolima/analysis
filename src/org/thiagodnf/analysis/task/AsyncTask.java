@@ -24,6 +24,8 @@ public abstract class AsyncTask extends SwingWorker<Object, Object>{
 		this.parent = parent;
 		this.pendingAsyncTask = new ArrayList<AsyncTask>();
 		this.monitor = new ProgressMonitor(parent, toString(), "...", 0, 10);
+		this.monitor.setMillisToDecideToPopup(0);
+		this.monitor.setMillisToPopup(0);
 	}
 	
 	public void updateNote(String note) {
