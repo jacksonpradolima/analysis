@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.thiagodnf.analysis.util.LoggerUtils;
 import org.thiagodnf.analysis.util.ParetoFrontUtils;
@@ -93,7 +94,7 @@ public class MaxMinGenerator extends Generator {
 		for (String file : files) {
 			updateNote(getCurrentProgress() + " from " + monitor.getMaximum());
 			
-			logger.info("Reading the fun file: " + file.replaceFirst(pathToPF, ""));
+			logger.info("Reading the fun file: " + file);
 
 			SolutionSet fun = SolutionSetUtils.getFromFile(file);
 
