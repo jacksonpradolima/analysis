@@ -15,16 +15,18 @@ import jmetal.core.SolutionSet;
 
 import org.apache.commons.io.FilenameUtils;
 import org.thiagodnf.analysis.util.LoggerUtils;
+import org.thiagodnf.analysis.util.ParetoFrontUtils;
 import org.thiagodnf.analysis.util.SolutionSetUtils;
 
 import com.google.common.base.Preconditions;
 
 /**
- * FUNALL Generator Class
+ * This class finds all FUN files and generates the maximum and minimum values
+ * for each objectives
  * 
  * @author Thiago Nascimento
  * @since 2015-10-27
- * @version 1.0.0
+ * @version 1.1.0
  */
 public class MaxMinGenerator extends Generator {
 	
@@ -41,54 +43,6 @@ public class MaxMinGenerator extends Generator {
 	}
 	
 	protected Void doInBackground() throws Exception {
-		generateMaxMinForEachFunFiles();
-		generateMaxMinForEachPFAPPROXFiles();
-		
-		return null;
-	}
-	
-	protected Void generateMaxMinForEachPFAPPROXFiles() throws Exception {
-	
-		List<String> files = getFilesStartingWith(folders, "PFAPROX");
-		
-		logger.info(files.size() + " has been found");
-
-		updateMaximum(files.size());
-
-		Map<String, List<String>> map = new HashMap<String, List<String>>();
-
-		for (String filename : files) {
-			updateNote("Sorting files " + getCurrentProgress() + " from " + files.size());
-
-			String key = FilenameUtils.getFullPath(filename);
-
-			if (!map.containsKey(key)) {
-				map.put(key, new ArrayList<String>());
-			}
-
-			map.get(key).add(filename);
-
-			updateProgress();
-		}
-		
-		updateMaximum(files.size());
-		
-		for (Entry<String, List<String>> entry : map.entrySet()) {
-			File[] f = new File[]{new File(entry.getKey())};
-			
-			List<String> maxMinFiles = getFilesStartingWith(f, "MAXMIN");
-			
-			generate(entry.getKey(), maxMinFiles, "_PFAPROX");
-		}
-		
-		afterFinishing();
-		
-		logger.info("Done");
-		
-		return null;
-	}
-	
-	protected Void generateMaxMinForEachFunFiles() throws Exception {
 		
 		List<String> files = getFilesStartingWith(folders, "FUN_");
 		
@@ -99,10 +53,16 @@ public class MaxMinGenerator extends Generator {
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
 
 		for (String filename : files) {
-			updateNote("Sorting files " + getCurrentProgress() + " from " + files.size());
+			updateNote(getCurrentProgress() + " from " + monitor.getMaximum());
 
-			String key = FilenameUtils.getFullPath(filename);
-
+			File pf = ParetoFrontUtils.findParetoFront(filename);
+			
+			if (pf == null) {
+				throw new IllegalArgumentException("The Approximate True Pareto-front not found.");
+			}
+			
+			String key = pf.getAbsolutePath();
+			
 			if (!map.containsKey(key)) {
 				map.put(key, new ArrayList<String>());
 			}
@@ -115,7 +75,7 @@ public class MaxMinGenerator extends Generator {
 		updateMaximum(files.size());
 		
 		for (Entry<String, List<String>> entry : map.entrySet()) {
-			generate(entry.getKey(), entry.getValue(), "");
+			generate(entry.getKey(), entry.getValue());
 		}
 		
 		afterFinishing();
@@ -125,8 +85,7 @@ public class MaxMinGenerator extends Generator {
 		return null;
 	}
 	
-	protected void generate(String folder, List<String> files, String suffix) throws Exception {
-		
+	protected void generate(String folder, List<String> files) throws Exception {
 		Preconditions.checkNotNull(folder, "Folder cannot be null");
 		Preconditions.checkArgument(!folder.isEmpty(), "Folder cannot be empty");
 		
@@ -134,15 +93,17 @@ public class MaxMinGenerator extends Generator {
 		
 		Solution maxValue = null;
 		Solution minValue = null;
+		
+		String pathToPF = FilenameUtils.getFullPath(new File(folder).getAbsolutePath());
 				
 		for (String file : files) {
 			updateNote(getCurrentProgress() + " from " + monitor.getMaximum());
 			
-			logger.info("Reading the fun file: " + file.replaceFirst(new File(file).getParent(),""));
+			logger.info("Reading the fun file: " + file.replaceFirst(pathToPF, ""));
 
 			SolutionSet fun = SolutionSetUtils.getFromFile(file);
 
-			logger.info(fun.size() + " found solutions. Joining all solutions");
+			logger.info(fun.size() + " found solutions.");
 
 			for (int i = 0; i < fun.size(); i++) {
 				Solution s = fun.get(i);
@@ -150,9 +111,11 @@ public class MaxMinGenerator extends Generator {
 				if (maxValue == null) {
 					maxValue = SolutionSetUtils.copy(s);
 				}
+
 				if (minValue == null) {
 					minValue = SolutionSetUtils.copy(s);
 				}
+
 				for (int j = 0; j < s.getNumberOfObjectives(); j++) {
 					if (s.getObjective(j) > maxValue.getObjective(j)) {
 						maxValue.setObjective(j, s.getObjective(j));
@@ -173,14 +136,12 @@ public class MaxMinGenerator extends Generator {
 
 		logger.info("Saving the MAXMIN file");
 
-		maxMinValues.printObjectivesToFile(folder + File.separator + "MAXMIN"+suffix);
+		maxMinValues.printObjectivesToFile(pathToPF + File.separator + "MAXMIN");
 	}
 	
 	@Override
 	public String toString() {
-		return "Running Max Min Generator";
-	}
-
-	
+		return "Running Maximum and Minimum Generator";
+	}	
 }
 
