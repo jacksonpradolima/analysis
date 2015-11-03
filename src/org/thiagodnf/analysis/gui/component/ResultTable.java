@@ -14,7 +14,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import org.jdesktop.swingx.util.OS;
 import org.thiagodnf.analysis.custom.DoubleComparator;
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.indicator.EpsilonIndicator;
@@ -29,6 +28,7 @@ import org.thiagodnf.analysis.indicator.TimeIndicator;
 import org.thiagodnf.analysis.util.NumberUtils;
 import org.thiagodnf.core.util.FilesUtils;
 import org.thiagodnf.core.util.PropertiesUtils;
+import org.thiagodnf.core.util.StringUtils;
 
 public class ResultTable extends JTable{
 	
@@ -94,15 +94,7 @@ public class ResultTable extends JTable{
 			return true;
 		}
 		return false;
-	}
-	
-	public String replace(String source, String term){
-		if (OS.isWindows()) {
-			source = source.replaceAll("\\", "/");
-			term = term.replaceAll("\\", "/");
-		}
-		return source.replaceFirst(term, "");
-	}
+	};
 	
 	public void reload() throws IOException {
 		if (directory != null) {
@@ -119,7 +111,7 @@ public class ResultTable extends JTable{
 		
 		// Get all indicator	
 		for (String file : files) {
-			String path = replace(file, directory.getAbsolutePath()).replaceFirst("SUMMARY", "");
+			String path = StringUtils.replaceFirst(file, directory.getAbsolutePath(), "").replaceFirst("SUMMARY","");
 			
 			// Save the link to file
 			if (!map.containsKey(path)) {
