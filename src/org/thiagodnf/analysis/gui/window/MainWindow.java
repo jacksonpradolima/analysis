@@ -113,7 +113,11 @@ public class MainWindow extends JFrame {
 			return;
 		}
 		
+		tree.setLoadingTree();
 		tree.setModel(tree.getLoadedModel(folder));
+		tree.setTreeLoaded();
+		
+		table.clear();
 	}
 		
 	protected JButton getNewToolBarButton(String name, String icon, AbstractAction action){

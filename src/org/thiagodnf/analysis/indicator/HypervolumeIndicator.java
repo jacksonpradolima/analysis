@@ -59,7 +59,7 @@ public class HypervolumeIndicator extends Indicator{
 		
 		String fullPath = FilenameUtils.getFullPath(paretoFront.getAbsolutePath());
 		
-		String maxMinPath = fullPath + File.separator + "MAXMIN_PFAPROX";
+		String maxMinPath = fullPath + File.separator + "MAXMIN";
 		
 		SolutionSet maxMinValues = SolutionSetUtils.getFromFile(maxMinPath);
 		

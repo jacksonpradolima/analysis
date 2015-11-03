@@ -24,8 +24,11 @@ public class FolderTree extends JTree implements TreeSelectionListener{
 	
 	protected JFrame parent;
 	
+	protected boolean isLoadingTree;
+	
 	public FolderTree(JFrame parent){
 		this.parent = parent;
+		this.isLoadingTree = false;
 		
 		// Start the component empty
 		setModel(null);
@@ -38,6 +41,9 @@ public class FolderTree extends JTree implements TreeSelectionListener{
 	
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
+		//Ignore this event when the user open a new folder
+		if(isLoadingTree) return;
+				
 		DefaultMutableTreeNode curNode = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
 		
 		// Read the depth using the parent
@@ -96,5 +102,13 @@ public class FolderTree extends JTree implements TreeSelectionListener{
 		}
 
 		return curDir;
+	}
+
+	public void setLoadingTree() {
+		this.isLoadingTree = true;		
+	}
+
+	public void setTreeLoaded() {
+		this.isLoadingTree = false;		
 	}
 }
