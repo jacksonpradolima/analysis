@@ -21,6 +21,7 @@ import org.thiagodnf.analysis.custom.DoubleComparator;
 import org.thiagodnf.analysis.indicator.Indicator;
 import org.thiagodnf.analysis.util.NumberUtils;
 import org.thiagodnf.core.util.PropertiesUtils;
+import org.thiagodnf.core.util.StringUtils;
 
 public class ViewDetailsWindow extends JPanel{
 
@@ -106,7 +107,7 @@ public class ViewDetailsWindow extends JPanel{
 		
 		// Get all indicator	
 		for (String file : files) {
-			String path = file.replaceFirst(folderName, "").replaceFirst("SUMMARY","");
+			String path = StringUtils.replaceFirst(file, folderName, "").replaceFirst("SUMMARY","");
 			
 			Properties prop = PropertiesUtils.getFromFile(file);
 			

@@ -16,6 +16,7 @@ import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBox;
 import org.thiagodnf.analysis.util.SolutionSetUtils;
 import org.thiagodnf.core.util.FilesUtils;
+import org.thiagodnf.core.util.StringUtils;
 
 public class ExportFromFUNALLToGnuplotTask extends AsyncTask {
 
@@ -43,7 +44,7 @@ public class ExportFromFUNALLToGnuplotTask extends AsyncTask {
 		
 		for (String file : files) {
 			String dir = ((MainWindow) parent).getResultTable().getDirectory().getAbsolutePath();
-			String filename = file.replaceAll("FUNALL", "").replaceAll(dir, "");
+			String filename = StringUtils.replaceFirst(file, dir, "").replaceAll("FUNALL", "");
 			buffer.append("'-' title \"" + filename + "\", ");
 		}
 		
