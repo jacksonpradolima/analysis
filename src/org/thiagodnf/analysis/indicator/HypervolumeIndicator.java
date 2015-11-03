@@ -8,7 +8,6 @@ import jmetal.qualityIndicator.Hypervolume;
 import jmetal.qualityIndicator.QualityIndicator;
 
 import org.apache.commons.io.FilenameUtils;
-import org.thiagodnf.analysis.task.generator.MaxMinGenerator;
 import org.thiagodnf.analysis.util.ParetoFrontUtils;
 import org.thiagodnf.analysis.util.SettingsUtils;
 import org.thiagodnf.analysis.util.SolutionSetUtils;
@@ -16,6 +15,13 @@ import org.thiagodnf.analysis.util.SolutionSetUtils;
 public class HypervolumeIndicator extends Indicator{
 
 	public jmetal.qualityIndicator.util.MetricsUtil utils_;
+	
+	public static final String DEFAULT_JMETAL = "Using Default JMetal";
+	
+	public static final String MAX_MIN_GENERATED_VALUES = "Using Max and Min Generated Values";
+	
+	public static final String ZERO_AND_ONE_VALUES = "Using 0.0 and 1.01 values";
+	
 	
 	public HypervolumeIndicator() {
 		super("Hypervolume", "hypervolume");
@@ -69,11 +75,11 @@ public class HypervolumeIndicator extends Indicator{
 		
 		double[][] tmp = null;
 		
-		if (SettingsUtils.getMaxMinValues() == MaxMinGenerator.DEFAULT) {
+		if (SettingsUtils.getNormalizeHypervolume().equalsIgnoreCase(DEFAULT_JMETAL)) {
 			tmp = truePareto;
-		} else if (SettingsUtils.getMaxMinValues() == MaxMinGenerator.MAXMIN) {
+		} else if (SettingsUtils.getNormalizeHypervolume().equalsIgnoreCase(MAX_MIN_GENERATED_VALUES)) {
 			tmp = maxMinValues.writeObjectivesToMatrix();
-		} else if (SettingsUtils.getMaxMinValues() == MaxMinGenerator.NORMALIZED) {
+		} else if (SettingsUtils.getNormalizeHypervolume().equalsIgnoreCase(ZERO_AND_ONE_VALUES)) {
 			tmp = normalizedValues.writeObjectivesToMatrix();
 		}	
 		

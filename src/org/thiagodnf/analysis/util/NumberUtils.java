@@ -5,6 +5,10 @@ import java.util.Properties;
 
 public class NumberUtils {
 
+	public static String round(Object number) {
+		return round(number, Integer.valueOf(SettingsUtils.getDecimalPlaces()));
+	}
+	
 	public static String round(Object number, int decimalPlates) {
 		String n = String.valueOf(number);
 		
@@ -16,6 +20,10 @@ public class NumberUtils {
 		
 		return String.valueOf(roundNumber);
 	}	
+	
+	public static String formatNumbers(Properties prop, String key) {
+		return formatNumbers(prop, key, Integer.valueOf(SettingsUtils.getDecimalPlaces()));
+	}
 	
 	public static String formatNumbers(Properties prop, String key, int round) {
 		String value = NumberUtils.round(prop.get(key + ".mean"), round);

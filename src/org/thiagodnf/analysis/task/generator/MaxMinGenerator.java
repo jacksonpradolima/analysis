@@ -32,12 +32,6 @@ public class MaxMinGenerator extends Generator {
 	
 	protected final static Logger logger = LoggerUtils.getLogger(MaxMinGenerator.class.getName());
 	
-	public static final int DEFAULT = 1;
-	
-	public static final int MAXMIN = 2;
-	
-	public static final int NORMALIZED = 3;
-	
 	public MaxMinGenerator(JFrame parent, File[] folders) {
 		super(parent, folders);
 	}

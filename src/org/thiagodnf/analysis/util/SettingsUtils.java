@@ -2,8 +2,6 @@ package org.thiagodnf.analysis.util;
 
 import java.util.prefs.Preferences;
 
-import org.thiagodnf.analysis.task.generator.MaxMinGenerator;
-
 /**
  * Settings Utils Class is responsible for save
  * all program settings used by user.
@@ -13,6 +11,14 @@ import org.thiagodnf.analysis.task.generator.MaxMinGenerator;
  * @since 2015-10-30 
  */
 public class SettingsUtils {
+	
+	public static final String NORMALIZE_HYPERVOLUME = "normalize-hypervolume";
+	
+	public static final String LOOK_AND_FEEL = "look-and-feel";
+	
+	public static final String DECIMAL_PLACES = "decimal-places";
+	
+	public static final String STANDARD_DEVIATION = "standard-deviation";
 
 	public static Preferences getPreferences() {
 		return Preferences.userNodeForPackage(SettingsUtils.class);
@@ -30,24 +36,24 @@ public class SettingsUtils {
 		return getPreferences().get(key, defaultValue);
 	}
 	
-	public static int getDecimalPlaces() {
-		return Integer.valueOf(getValue("decimal-places", "5"));
+	public static String getDecimalPlaces() {
+		return getValue(DECIMAL_PLACES, "5");
 	}
 	
 	public static void setDecimalPlaces(String value) {
-		setValue("decimal-places", value);
+		setValue(DECIMAL_PLACES, value);
+	}	
+
+	public static void setStandardDeviation(String value) {
+		setValue(STANDARD_DEVIATION, value);
 	}
 	
-	public static String[] getAvailableDecimalPlaces(){
-		return new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-	}
-
-	public static void setStandardDeviation(boolean value) {
-		setValue("is-standard-deviation-visible", String.valueOf(value));
+	public static String getStandardDeviation() {
+		return getValue(STANDARD_DEVIATION, OptionsUtils.getAvailableStandardDeviation()[0]);
 	}
 	
 	public static boolean isStandardDeviationVisible() {
-		if (getValue("is-standard-deviation-visible", "True").equalsIgnoreCase( "True")) {
+		if (getValue(STANDARD_DEVIATION, "True").equalsIgnoreCase( "True")) {
 			return true;
 		}
 
@@ -55,28 +61,38 @@ public class SettingsUtils {
 	}	
 	
 	public static void setLookAndFeel(String value) {
-		setValue("look-and-feel", value);
+		setValue(LOOK_AND_FEEL, value);
 	}
 	
 	public static String getLookAndFeel() {
-		return getValue("look-and-feel", "javax.swing.plaf.nimbus.NimbusLookAndFeel");
-	}
-
-	public static void setMaxMinValues(int value) {
-		setValue("normalize-hypervolume", String.valueOf(value));
+		return getValue(LOOK_AND_FEEL, "javax.swing.plaf.nimbus.NimbusLookAndFeel");
 	}
 	
-	public static int getMaxMinValues() {
-		String value = getValue("normalize-hypervolume", "1");
-		
-		if (value.equalsIgnoreCase("1")) {
-			return MaxMinGenerator.DEFAULT;
-		} else if (value.equalsIgnoreCase("2")) {
-			return MaxMinGenerator.MAXMIN;
-		} else if (value.equalsIgnoreCase("3")) {
-			return MaxMinGenerator.NORMALIZED;
-		}
-		
-		return 0;
+	public static void setNormalizeHypervolume(int value) {
+		setValue(NORMALIZE_HYPERVOLUME, String.valueOf(value));
 	}
+	
+	public static void setNormalizeHypervolume(String value) {
+		setValue(NORMALIZE_HYPERVOLUME, value);
+	}
+	
+	public static String getNormalizeHypervolume() {
+		return getValue(NORMALIZE_HYPERVOLUME, OptionsUtils.getAvailableNormalizeHypervolume()[0]);
+	}
+//	
+//	public static int getNormalizeHypervolume() {
+//		String value = getValue(NORMALIZE_HYPERVOLUME, "1");
+//		
+//		if (value.equalsIgnoreCase("1")) {
+//			return MaxMinGenerator.DEFAULT;
+//		} else if (value.equalsIgnoreCase("2")) {
+//			return MaxMinGenerator.MAXMIN;
+//		} else if (value.equalsIgnoreCase("3")) {
+//			return MaxMinGenerator.NORMALIZED;
+//		}
+//		
+//		return 0;
+//	}
+
+	
 }

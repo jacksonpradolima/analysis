@@ -20,7 +20,6 @@ import javax.swing.table.TableRowSorter;
 import org.thiagodnf.analysis.custom.DoubleComparator;
 import org.thiagodnf.analysis.indicator.Indicator;
 import org.thiagodnf.analysis.util.NumberUtils;
-import org.thiagodnf.analysis.util.SettingsUtils;
 import org.thiagodnf.core.util.PropertiesUtils;
 
 public class ViewDetailsWindow extends JPanel{
@@ -103,8 +102,6 @@ public class ViewDetailsWindow extends JPanel{
 		
 		List<Object[]> data = new ArrayList<Object[]>();
 		
-		int round = SettingsUtils.getDecimalPlaces();
-		
 		int id = 0;
 		
 		// Get all indicator	
@@ -116,13 +113,13 @@ public class ViewDetailsWindow extends JPanel{
 			Object[] row = new Object[] {
 				++id,
 				path,
-				NumberUtils.round(prop.get(indicator.getKey()+".mean"), round),
-				NumberUtils.round(prop.get(indicator.getKey()+".sd"), round),				
-				NumberUtils.round(prop.get(indicator.getKey()+".max"), round),
-				NumberUtils.round(prop.get(indicator.getKey()+".min"), round),
-				NumberUtils.round(prop.get(indicator.getKey()+".sum"), round),
-				NumberUtils.round(prop.get(indicator.getKey()+".n"), round),
-				NumberUtils.round(prop.get(indicator.getKey()+".variance"), round),
+				NumberUtils.round(prop.get(indicator.getKey()+".mean")),
+				NumberUtils.round(prop.get(indicator.getKey()+".sd")),				
+				NumberUtils.round(prop.get(indicator.getKey()+".max")),
+				NumberUtils.round(prop.get(indicator.getKey()+".min")),
+				NumberUtils.round(prop.get(indicator.getKey()+".sum")),
+				NumberUtils.round(prop.get(indicator.getKey()+".n")),
+				NumberUtils.round(prop.get(indicator.getKey()+".variance")),
 			};
 			
 			data.add(row);

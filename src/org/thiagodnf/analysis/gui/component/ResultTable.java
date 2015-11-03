@@ -26,7 +26,6 @@ import org.thiagodnf.analysis.indicator.NumberOfSolutionsIndicator;
 import org.thiagodnf.analysis.indicator.SpreadIndicator;
 import org.thiagodnf.analysis.indicator.TimeIndicator;
 import org.thiagodnf.analysis.util.NumberUtils;
-import org.thiagodnf.analysis.util.SettingsUtils;
 import org.thiagodnf.core.util.FilesUtils;
 import org.thiagodnf.core.util.PropertiesUtils;
 
@@ -76,22 +75,6 @@ public class ResultTable extends JTable{
 		
 		//Define the max width of first column. This column contains the checkbox element
 		getColumnModel().getColumn(0).setMaxWidth(25);
-		
-		
-//		getModel().addTableModelListener(new TableModelListener() {
-//			@Override
-//			public void tableChanged(TableModelEvent e) {
-//				if(getSelectedColumn() == 0){
-//					getSelectionModel().clearSelection();
-//					
-//					for (int i = 0; i < getModel().getRowCount(); i++) {
-//						if ((Boolean) getModel().getValueAt(i, 0)) {
-//							getSelectionModel().addSelectionInterval(i, i);						
-//						}
-//					}
-//				}
-//			}
-//		});
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -125,8 +108,6 @@ public class ResultTable extends JTable{
 		
 		List<Object[]> data = new ArrayList<Object[]>();
 		
-		int round = SettingsUtils.getDecimalPlaces();
-		
 		// Get all indicator	
 		for (String file : files) {
 			String path = file.replaceFirst(directory.getAbsolutePath(), "").replaceFirst("SUMMARY","");
@@ -141,15 +122,15 @@ public class ResultTable extends JTable{
 			Object[] row = new Object[] {
 				new Boolean(false),
 				path,
-				NumberUtils.formatNumbers(prop, new HypervolumeIndicator().getKey(), round),
-				NumberUtils.formatNumbers(prop, new GDIndicator().getKey(), round),
-				NumberUtils.formatNumbers(prop, new IGDIndicator().getKey(), round),
-				NumberUtils.formatNumbers(prop, new SpreadIndicator().getKey(), round),
-				NumberUtils.formatNumbers(prop, new EpsilonIndicator().getKey(), round),
-				NumberUtils.formatNumbers(prop, new NumberOfSolutionsIndicator().getKey(), round),
-				NumberUtils.formatNumbers(prop, new NumberOfNonRepeatedSolutionsIndicator().getKey(), round),
-				NumberUtils.formatNumbers(prop, new InParetoFrontIndicator().getKey(), round),
-				NumberUtils.formatNumbers(prop, new TimeIndicator().getKey(), round),
+				NumberUtils.formatNumbers(prop, new HypervolumeIndicator().getKey()),
+				NumberUtils.formatNumbers(prop, new GDIndicator().getKey()),
+				NumberUtils.formatNumbers(prop, new IGDIndicator().getKey()),
+				NumberUtils.formatNumbers(prop, new SpreadIndicator().getKey()),
+				NumberUtils.formatNumbers(prop, new EpsilonIndicator().getKey()),
+				NumberUtils.formatNumbers(prop, new NumberOfSolutionsIndicator().getKey()),
+				NumberUtils.formatNumbers(prop, new NumberOfNonRepeatedSolutionsIndicator().getKey()),
+				NumberUtils.formatNumbers(prop, new InParetoFrontIndicator().getKey()),
+				NumberUtils.formatNumbers(prop, new TimeIndicator().getKey()),
 			};
 			
 			List<String> filter = ((MainWindow) parent).getFilter();
