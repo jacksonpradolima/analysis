@@ -111,7 +111,7 @@ public class ResultTable extends JTable{
 		
 		// Get all indicator	
 		for (String file : files) {
-			String path = StringUtils.replaceFirst(file, directory.getAbsolutePath(), "").replaceFirst("SUMMARY","");
+			String path = file.replaceFirst("SUMMARY","");
 			
 			// Save the link to file
 			if (!map.containsKey(path)) {
