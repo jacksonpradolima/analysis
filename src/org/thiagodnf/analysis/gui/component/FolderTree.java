@@ -68,9 +68,8 @@ public class FolderTree extends JTree implements TreeSelectionListener{
 		try {
 			((MainWindow) parent).getResultTable().load(new File(directory));
 		} catch (IOException ex) {
-			MessageBox.error(parent, ex.getMessage());
-			ex.printStackTrace();
-		}	
+			MessageBox.error(parent, ex);
+		}
 	}
 	
 	public DefaultTreeModel getLoadedModel(File folder) {
@@ -80,8 +79,8 @@ public class FolderTree extends JTree implements TreeSelectionListener{
 	/**
 	 * Add nodes from under "dir" into curTop. Highly recursive.
 	 */
-	protected DefaultMutableTreeNode addNodes(DefaultMutableTreeNode curTop,
-			File dir) {
+	protected DefaultMutableTreeNode addNodes(DefaultMutableTreeNode curTop, File dir) {
+		
 		String curPath = dir.getPath();
 
 		DefaultMutableTreeNode curDir = new DefaultMutableTreeNode(FilenameUtils.getName(curPath));

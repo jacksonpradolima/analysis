@@ -3,46 +3,44 @@ package org.thiagodnf.analysis.gui.action;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 import org.thiagodnf.analysis.gui.window.MainWindow;
-import org.thiagodnf.analysis.gui.window.MessageBox;
 
-public class DoOpenFoldersAction extends AbstractAction {
+/**
+ * This class is responsible for open a folder that was selected by user
+ *  
+ * @author Thiago Nascimento
+ * @since 2015-11-03
+ * @version 1.0.0
+ *
+ */
+public class DoOpenFoldersAction extends DoAction {
 
 	private static final long serialVersionUID = -2332276187918581439L;
 	
-	protected JFrame parent;
-	
 	public DoOpenFoldersAction(JFrame parent){
-		this.parent = parent;
+		super(parent);
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void execute(ActionEvent event) throws Exception {
 		final JFileChooser fc = new JFileChooser();
 
 		fc.setCurrentDirectory(new File("."));
-		
+
 		// The user must to select a folder with all files
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		
+
 		if (fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
 			// Folder that was selected by user
-			File selectedFolder = fc.getSelectedFile();
-			
-			((MainWindow) parent).setFolder(selectedFolder);
-			
+			((MainWindow) parent).setFolder(fc.getSelectedFile());
+
+			// New folder open must to clear the filter
 			((MainWindow) parent).getFilter().clear();
-			
-			try {
-				((MainWindow) parent).openFolder();
-			} catch (Exception ex) {
-				MessageBox.error(parent, ex.getMessage());
-				ex.printStackTrace();
-			}
+
+			((MainWindow) parent).openFolder();
 		}
 	}
 }

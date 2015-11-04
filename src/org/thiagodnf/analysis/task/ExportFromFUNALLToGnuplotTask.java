@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
@@ -12,26 +13,30 @@ import jmetal.core.SolutionSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.gui.window.MessageBox;
+import org.thiagodnf.analysis.util.LoggerUtils;
 import org.thiagodnf.analysis.util.SolutionSetUtils;
 import org.thiagodnf.core.util.FilesUtils;
-import org.thiagodnf.core.util.StringUtils;
 
 public class ExportFromFUNALLToGnuplotTask extends AsyncTask {
 
+	protected static final Logger logger = LoggerUtils.getLogger(ExportFromFUNALLToGnuplotTask.class.getName());
+	
 	protected List<String> folders;
 	
 	protected File outputFolder;
 	
 	public ExportFromFUNALLToGnuplotTask(JFrame parent, List<String> folders, File outputFolder) {
 		super(parent);		
+		
 		this.folders = folders;
 		this.outputFolder = outputFolder;
 	}
 
 	@Override
 	protected Object doInBackground() throws Exception {
+		
+		logger.info("Loading FUNALL files");
 		
 		List<String> files = new ArrayList<String>();
 		
@@ -40,17 +45,20 @@ public class ExportFromFUNALLToGnuplotTask extends AsyncTask {
 			files.addAll(FilesUtils.getFiles(fullpath, "FUNALL"));
 		}
 		
+		logger.info(files.size()+" files were found. Generating GNUPLOT file");
+		
+		updateMaximum(files.size());
+		
 		StringBuffer buffer = new StringBuffer("plot ");
 		
 		for (String file : files) {
-			String dir = ((MainWindow) parent).getResultTable().getDirectory().getAbsolutePath();
-			String filename = StringUtils.replaceFirst(file, dir, "").replaceAll("FUNALL", "");
-			buffer.append("'-' title \"" + filename + "\", ");
+			buffer.append("'-' title \"" + file + "\", ");
 		}
 		
 		buffer.append("\n");
 		
 		for(String file : files){
+			logger.info("Processing " + file);
 			
 			SolutionSet population = SolutionSetUtils.getFromFile(new File(file));
 			
@@ -68,9 +76,15 @@ public class ExportFromFUNALLToGnuplotTask extends AsyncTask {
 			}
 			
 			buffer.append("EOF \n");
+			
+			updateProgress();
 		}
+		
+		logger.info("Saving the file");
 	
 		FileUtils.writeStringToFile(outputFolder, buffer.toString());
+		
+		logger.info("Done");
 		
 		return null;
 	}
@@ -91,6 +105,6 @@ public class ExportFromFUNALLToGnuplotTask extends AsyncTask {
 	
 	@Override
 	public String toString() {
-		return "Loading files";
+		return "Export FUNALL Files to GNUPLOT File";
 	}
 }

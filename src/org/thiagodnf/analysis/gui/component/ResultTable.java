@@ -27,8 +27,8 @@ import org.thiagodnf.analysis.indicator.SpreadIndicator;
 import org.thiagodnf.analysis.indicator.TimeIndicator;
 import org.thiagodnf.analysis.util.NumberUtils;
 import org.thiagodnf.core.util.FilesUtils;
+import org.thiagodnf.core.util.OSUtils;
 import org.thiagodnf.core.util.PropertiesUtils;
-import org.thiagodnf.core.util.StringUtils;
 
 public class ResultTable extends JTable{
 	
@@ -109,9 +109,11 @@ public class ResultTable extends JTable{
 		
 		List<Object[]> data = new ArrayList<Object[]>();
 		
+		this.map.clear();
+		
 		// Get all indicator	
 		for (String file : files) {
-			String path = file.replaceFirst("SUMMARY","");
+			String path = formatPath(directory.getAbsolutePath(), file.replaceAll("SUMMARY", ""));
 			
 			// Save the link to file
 			if (!map.containsKey(path)) {
@@ -189,6 +191,15 @@ public class ResultTable extends JTable{
 		}
 
 		return files;
+	}
+	
+	public String formatPath(String directory, String file){
+		if (OSUtils.isWindows()) {
+			directory = directory.replaceAll("\\\\", "/");
+			file = file.replaceAll("\\\\", "/");
+		}
+		
+		return file.replaceAll(directory, "");
 	}
 	
 	public File getDirectory(){
