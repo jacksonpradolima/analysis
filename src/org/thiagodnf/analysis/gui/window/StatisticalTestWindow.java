@@ -21,6 +21,7 @@ import org.thiagodnf.analysis.indicator.Indicator;
 import org.thiagodnf.analysis.util.ProcessUtils;
 import org.thiagodnf.core.util.FilesUtils;
 import org.thiagodnf.core.util.PropertiesUtils;
+import org.thiagodnf.core.util.StringUtils;
 
 public class StatisticalTestWindow extends JPanel{
 
@@ -89,7 +90,7 @@ public class StatisticalTestWindow extends JPanel{
 		StringBuffer buffer = new StringBuffer();
 		
 		for (Entry<String, String> entry : idMap.entrySet()) {
-			buffer.append(entry.getValue() + " = " + entry.getKey().replaceFirst(folderName,"") + "\n");
+			buffer.append(entry.getValue() + " = " + StringUtils.replaceFirst(entry.getKey(), folderName, "") + "\n");
 		}
 		
 		return buffer.toString();
