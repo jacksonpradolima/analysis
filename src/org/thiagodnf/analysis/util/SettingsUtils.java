@@ -53,7 +53,7 @@ public class SettingsUtils {
 	}
 	
 	public static boolean isStandardDeviationVisible() {
-		if (getValue(STANDARD_DEVIATION, "True").equalsIgnoreCase( "True")) {
+		if (getValue(STANDARD_DEVIATION, "True").equalsIgnoreCase( "Yes")) {
 			return true;
 		}
 
