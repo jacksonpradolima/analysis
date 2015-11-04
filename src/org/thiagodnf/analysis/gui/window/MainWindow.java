@@ -24,7 +24,7 @@ import org.thiagodnf.analysis.gui.action.DoOpenFoldersAction;
 import org.thiagodnf.analysis.gui.action.DoPreferencesAction;
 import org.thiagodnf.analysis.gui.action.DoSearchAction;
 import org.thiagodnf.analysis.gui.action.DoStatisticalTestAction;
-import org.thiagodnf.analysis.gui.action.DoViewDetailsAction;
+import org.thiagodnf.analysis.gui.action.DoDetailsAction;
 import org.thiagodnf.analysis.gui.component.FolderTree;
 import org.thiagodnf.analysis.gui.component.ResultTable;
 import org.thiagodnf.core.util.ImageUtils;
@@ -75,7 +75,7 @@ public class MainWindow extends JFrame {
 
 		toolBar.add(getNewToolBarButton("Generator", "design.png", new DoGeneratorAction(this)));
 
-		toolBar.add(getNewToolBarButton("View Details", "inbox.png", new DoViewDetailsAction(this)));
+		toolBar.add(getNewToolBarButton("Details", "inbox.png", new DoDetailsAction(this)));
 		toolBar.add(getNewToolBarButton("Statistical Test", "statistics.png", new DoStatisticalTestAction(this)));		
 		toolBar.addSeparator();
 		toolBar.add(getNewToolBarButton("Search", "search.png", new DoSearchAction(this)));
