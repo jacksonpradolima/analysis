@@ -1,4 +1,4 @@
-package org.thiagodnf.analysis.task;
+package org.thiagodnf.analysis.task.export;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import jmetal.core.SolutionSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.thiagodnf.analysis.gui.window.MessageBox;
+import org.thiagodnf.analysis.task.AsyncTask;
 import org.thiagodnf.analysis.util.LoggerUtils;
 import org.thiagodnf.analysis.util.SolutionSetUtils;
 import org.thiagodnf.core.util.FilesUtils;

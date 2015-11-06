@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
 
+import org.thiagodnf.analysis.gui.window.MessageBox;
+
 public abstract class AsyncTask extends SwingWorker<Object, Object>{
 	
 	protected JFrame parent;
@@ -68,6 +70,20 @@ public abstract class AsyncTask extends SwingWorker<Object, Object>{
 
 	public void afterFinishing() {
 		updateProgress(monitor.getMaximum());
+	}
+	
+	@Override
+	protected void done() {
+		try {
+			get();
+			MessageBox.info(parent, "Done");			
+		} catch (Exception e) {
+			if (!(e instanceof CancellationException)) {
+				e.getCause().printStackTrace();
+				String msg = String.format("Unexpected problem: %s", e.getCause().toString());
+				MessageBox.error(parent, msg);
+			}
+		}
 	}
 	
 	public abstract String toString();

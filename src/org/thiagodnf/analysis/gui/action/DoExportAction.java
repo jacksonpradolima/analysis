@@ -4,12 +4,15 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 import org.thiagodnf.analysis.gui.window.MainWindow;
 import org.thiagodnf.analysis.task.AsyncTask;
-import org.thiagodnf.analysis.task.ExportFromFUNALLToGnuplotTask;
+import org.thiagodnf.analysis.task.export.ExportFromFUNALLToGnuplotTask;
+import org.thiagodnf.analysis.task.export.ExportFromJTableToLatexTableTask;
 
 /**
  * This class is responsible for show a prompt where the user must to
@@ -38,6 +41,7 @@ public class DoExportAction extends DoAction {
 		List<String> options = new ArrayList<String>();
 		
 		options.add("FUNALL Files to Gnuplot");
+		options.add("Selected Rows to Latex Table");
 		
 		String[] names = new String[options.size()];
 			
@@ -56,12 +60,18 @@ public class DoExportAction extends DoAction {
 		JFileChooser fc = new JFileChooser();
 		
 		if (fc.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
+			
 			File outputFolder = fc.getSelectedFile();
 			
-			if(selected.equalsIgnoreCase("FUNALL Files to Gnuplot")){
-				AsyncTask task = new ExportFromFUNALLToGnuplotTask(parent, folders, outputFolder);
-				task.execute();
+			AsyncTask task = null;
+			
+			if (selected.equalsIgnoreCase(options.get(0))) {
+				task = new ExportFromFUNALLToGnuplotTask(parent, folders, outputFolder);
+			} else if (selected.equalsIgnoreCase(options.get(1))) {
+				task = new ExportFromJTableToLatexTableTask(parent, outputFolder, window.getResultTable());
 			}
+			
+			task.execute();			
 		}		
 	}
 }
