@@ -58,6 +58,8 @@ public class ResultTable extends JTable{
 		columnNames.add(new NumberOfNonRepeatedSolutionsIndicator().getName());
 		columnNames.add(new InParetoFrontIndicator().getName());
 		columnNames.add(new TimeIndicator().getName());
+		columnNames.add("Solutions in PFKnown");
+		columnNames.add("PFKnown in PFApprox");
 		
 		String[] columns = columnNames.toArray(new String[columnNames.size()]);
 
@@ -115,6 +117,14 @@ public class ResultTable extends JTable{
 		for (String file : files) {
 			String path = formatPath(directory.getAbsolutePath(), file.replaceAll("SUMMARY", ""));
 			
+			String p = new File(path).getParent();
+			
+			Properties pPFKnown = null;
+
+			if (new File(directory.getAbsolutePath() + p + File.separator + "QI_PFKNOWN").exists()) {
+				pPFKnown = PropertiesUtils.getFromFile(directory.getAbsolutePath() + p + File.separator + "QI_PFKNOWN");
+			}
+			
 			// Save the link to file
 			if (!map.containsKey(path)) {
 				map.put(path, file);
@@ -134,6 +144,8 @@ public class ResultTable extends JTable{
 				NumberUtils.formatNumbers(prop, new NumberOfNonRepeatedSolutionsIndicator().getKey()),
 				NumberUtils.formatNumbers(prop, new InParetoFrontIndicator().getKey()),
 				NumberUtils.formatNumbers(prop, new TimeIndicator().getKey()),
+				(pPFKnown == null) ? 0.0 : pPFKnown.getProperty("number-of-solutions"),
+				(pPFKnown == null) ? 0.0 : pPFKnown.getProperty("in-pareto-front"),	
 			};
 			
 			List<String> filter = ((MainWindow) parent).getFilter();
