@@ -52,3 +52,5 @@ output/
 .texlipse
 
 
+/analysis/nbproject/private/
+/build/
