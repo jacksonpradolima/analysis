@@ -170,9 +170,7 @@ public class StatisticalTestWindow extends JPanel {
             buffer.append("print(\"============================================\") \n");
             buffer.append("print(\"============ Kruskal Wallis ================\") \n");
             buffer.append("print(\"============================================\") \n");
-            buffer.append("kruskal.test(Value ~ Group, data=data) \n");            
-            buffer.append("print(\"============================================\") \n");           
-            buffer.append("pairwise.wilcox.test(Value, Group, p.adj=\"bonferroni\", exact=F) \n");                                   
+            buffer.append("kruskal.test(Value ~ Group, data=data) \n");                        
             buffer.append("print(\"============================================\") \n");
             //buffer.append("print(\"Generating boxplot graph how file plot.png \") \n");
             //buffer.append("png(\"plot.png\") \n");            
@@ -182,8 +180,9 @@ public class StatisticalTestWindow extends JPanel {
             buffer.append("print(\"============================================\") \n");             
             buffer.append("with(data, {posthoc.kruskal.nemenyi.test(Value, Group, \"Tukey\")\n}) \n");                   
             buffer.append("print(\"============================================\") \n");
-            buffer.append("kruskalmc(Value ~ Group, probs=0.05, data=data) \n\n");
-            buffer.append("print(\"============================================\") \n");
+            buffer.append("kruskalmc(Value ~ Group, probs=0.05, data=data,group=FALSE) \n\n");
+            buffer.append("print(\"============================================\") \n");            
+            buffer.append("pairwise.wilcox.test(Value, Group, p.adj=\"bonferroni\", exact=F) \n");                                   
 //        }
 
         buffer.append("print(\"============================================\") \n");
