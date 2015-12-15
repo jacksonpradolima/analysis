@@ -50,7 +50,29 @@ public class ExportFromFUNALLToGnuplotTask extends AsyncTask {
 		
 		updateMaximum(files.size());
 		
-		StringBuffer buffer = new StringBuffer("plot ");
+		int numberOfObjectives = -1;
+		
+		for(String file : files){
+			SolutionSet population = SolutionSetUtils.getFromFile(new File(file));
+			
+			int nObjectives = SolutionSetUtils.getNumberOfObjectives(population);
+			
+			if(numberOfObjectives == -1){
+				numberOfObjectives = nObjectives;
+			}else if(numberOfObjectives != nObjectives){
+				throw new IllegalArgumentException("Number of objectives cannot be different");
+			}			
+		}
+		
+		StringBuffer buffer = new StringBuffer();
+		
+		if (numberOfObjectives == 2) {
+			buffer.append("plot ");
+		} else if (numberOfObjectives == 3) {
+			buffer.append("splot ");
+		} else {
+			throw new IllegalArgumentException("Number of objectives should be two or three");
+		}	
 		
 		for (String file : files) {
 			buffer.append("'-' title \"" + file + "\", ");
