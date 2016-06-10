@@ -55,8 +55,18 @@ public class StatisticalTestWindow extends JPanel {
             String basePath = FilenameUtils.getFullPath(file);
 
             List<String> qiFiles = FilesUtils.getFiles(new File(basePath), "QI_FUN_");
+            
+            //String id = "data_" + countId++;
+            String id = "";
 
-            String id = "data_" + countId++;
+            //TODO: Remove the new id
+            if (basePath.contains("NSGAII_3")) {
+                id = "NSGA_II_T";
+            } else if (basePath.contains("Random")) {
+                id = "NSGA_II_R";
+            } else {
+                id = "NSGA_II_F";
+            }
 
             StringBuffer buffer = new StringBuffer("c(");
 
@@ -65,7 +75,8 @@ public class StatisticalTestWindow extends JPanel {
             for (String qiFile : qiFiles) {
                 Properties prop = PropertiesUtils.getFromFile(qiFile);
 
-                buffer.append(prop.get(indicator.getKey()));
+                //TODO: Remove division by 1000
+                buffer.append(Double.parseDouble(prop.get(indicator.getKey()).toString()) / 1000);
 
                 buffer.append(",");
 
@@ -144,15 +155,15 @@ public class StatisticalTestWindow extends JPanel {
         StringBuffer buffer = new StringBuffer();
 
         buffer.append("library(effsize)\n");
-        buffer.append("library(pgirmess)\n");       
-        buffer.append("library(stats)\n");       
-        buffer.append("library(graphics)\n");       
-        buffer.append("library(grDevices)\n");       
-        buffer.append("library(utils)\n");       
-        buffer.append("library(datasets)\n");       
-        buffer.append("library(methods)\n");       
-        buffer.append("library(base)\n");  
-        buffer.append("library(PMCMR)\n"); 
+        buffer.append("library(pgirmess)\n");
+        buffer.append("library(stats)\n");
+        buffer.append("library(graphics)\n");
+        buffer.append("library(grDevices)\n");
+        buffer.append("library(utils)\n");
+        buffer.append("library(datasets)\n");
+        buffer.append("library(methods)\n");
+        buffer.append("library(base)\n");
+        buffer.append("library(PMCMR)\n");
 
         buffer.append(getData(dataMap));
 
@@ -166,28 +177,22 @@ public class StatisticalTestWindow extends JPanel {
 //            buffer.append("print(\"   Mann-Whitney (Wilcox)                    \") \n");
 //            buffer.append("print(\"============================================\") \n");
 //            buffer.append("wilcox.test(Value ~ Group, data=data) \n");
-//        } else {
-            buffer.append("print(\"============================================\") \n");
-            buffer.append("print(\"============ Kruskal Wallis ================\") \n");
-            buffer.append("print(\"============================================\") \n");
-            buffer.append("kruskal.test(Value ~ Group, data=data) \n");                        
-            buffer.append("print(\"============================================\") \n");
-            //buffer.append("print(\"Generating boxplot graph how file plot.png \") \n");
-            //buffer.append("png(\"plot.png\") \n");            
-            //buffer.append("boxplot(Value ~ Group, data=data, main=\"Group Comparison\", ylab=\"Value\") \n");                        
-            //buffer.append("dev.off() \n");                        
-            buffer.append("print(\"===== Post-Hoc test for Kruskal Wallis =====\") \n");
-            buffer.append("print(\"============================================\") \n");             
-            buffer.append("with(data, {posthoc.kruskal.nemenyi.test(Value, Group, \"Tukey\")\n}) \n");                   
-            buffer.append("print(\"============================================\") \n");
-            buffer.append("kruskalmc(Value ~ Group, probs=0.05, data=data,group=FALSE) \n\n");
-            buffer.append("print(\"============================================\") \n");            
-            buffer.append("pairwise.wilcox.test(Value, Group, p.adj=\"bonferroni\", exact=F) \n");                                   
-//        }
-
+//        } else {        
+        buffer.append("print(\"============ Kruskal Wallis ================\") \n");
+        buffer.append("kruskal.test(Value ~ Group, data=data) \n");
         buffer.append("print(\"============================================\") \n");
+        //buffer.append("print(\"Generating boxplot graph how file plot.png \") \n");
+        //buffer.append("png(\"plot.png\") \n");            
+        //buffer.append("boxplot(Value ~ Group, data=data, main=\"Group Comparison\", ylab=\"Value\") \n");                        
+        //buffer.append("dev.off() \n");                        
+        buffer.append("print(\"===== Post-Hoc test for Kruskal Wallis =====\") \n");
+        buffer.append("with(data, {posthoc.kruskal.nemenyi.test(Value, Group, \"Tukey\")\n}) \n");
+        buffer.append("print(\"============================================\") \n");
+        buffer.append("kruskalmc(Value ~ Group, probs=0.05, data=data,group=FALSE) \n\n");
+        buffer.append("print(\"============================================\") \n");
+        buffer.append("pairwise.wilcox.test(Value, Group, p.adj=\"bonferroni\", exact=F) \n");
+//        }       
         buffer.append("print(\"== Effect Size using Vargha and Delaney A ==\") \n");
-        buffer.append("print(\"============================================\") \n");
 
         for (Entry<String, String> entryOne : dataMap.entrySet()) {
             String one = entryOne.getKey();
@@ -199,6 +204,9 @@ public class StatisticalTestWindow extends JPanel {
                 }
             }
         }
+
+        //buffer.append("print(\"== Boxplot ==\") \n");
+        //buffer.append("boxplot(Value~Group,data=data, main=\"WS\", ylab=\"Time (s)\") \n");
 
         String result = "";
 

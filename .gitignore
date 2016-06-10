@@ -50,3 +50,8 @@ output/
 
 # TeXlipse plugin
 .texlipse
+
+# Maven Targets
+gui/target/*
+core/target/*
+cli/target/*
