@@ -1,8 +1,0 @@
-Version 1.1.0
-	- Add Max Min Generator
-	- Add Hypervolume using default jmetal, max and min generated values and zero or one
-	- When run generator, reload folder when it is opened
-	- Add export to gnuplot a FUNALL file
-
-Version 1.0.0
-	- First version
