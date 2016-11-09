@@ -49,36 +49,58 @@ public class ExportFromFUNALLToGnuplotTask extends AsyncTask {
         logger.info(files.size() + " files were found. Generating GNUPLOT file");
 
         updateMaximum(files.size());
+		
+        int numberOfObjectives = -1;
 
-        StringBuffer buffer = new StringBuffer("plot ");
+        for(String file : files){
+                SolutionSet population = SolutionSetUtils.getFromFile(new File(file));
+
+                int nObjectives = SolutionSetUtils.getNumberOfObjectives(population);
+
+                if(numberOfObjectives == -1){
+                        numberOfObjectives = nObjectives;
+                }else if(numberOfObjectives != nObjectives){
+                        throw new IllegalArgumentException("Number of objectives cannot be different");
+                }			
+        }
+
+        StringBuffer buffer = new StringBuffer();
+
+        if (numberOfObjectives == 2) {
+                buffer.append("plot ");
+        } else if (numberOfObjectives == 3) {
+                buffer.append("splot ");
+        } else {
+                throw new IllegalArgumentException("Number of objectives should be two or three");
+        }	
 
         for (String file : files) {
-            buffer.append("'-' title \"" + file + "\", ");
+                buffer.append("'-' title \"" + file + "\", ");
         }
 
         buffer.append("\n");
 
-        for (String file : files) {
-            logger.info("Processing " + file);
+        for(String file : files){
+                logger.info("Processing " + file);
 
-            SolutionSet population = SolutionSetUtils.getFromFile(new File(file));
+                SolutionSet population = SolutionSetUtils.getFromFile(new File(file));
 
-            for (int i = 0; i < population.size(); i++) {
-                Solution s = population.get(i);
+                for (int i = 0; i < population.size(); i++) {
+                        Solution s = population.get(i);
 
-                for (int j = 0; j < s.getNumberOfObjectives(); j++) {
-                    buffer.append(s.getObjective(j));
+                        for (int j = 0; j < s.getNumberOfObjectives(); j++) {
+                                buffer.append(s.getObjective(j));
 
-                    if (j + 1 != s.getNumberOfObjectives()) {
-                        buffer.append(" ");
-                    }
+                                if (j + 1 != s.getNumberOfObjectives()) {
+                                        buffer.append(" ");
+                                }
+                        }
+                        buffer.append("\n");
                 }
-                buffer.append("\n");
-            }
 
-            buffer.append("EOF \n");
+                buffer.append("EOF \n");
 
-            updateProgress();
+                updateProgress();
         }
 
         logger.info("Saving the file");
