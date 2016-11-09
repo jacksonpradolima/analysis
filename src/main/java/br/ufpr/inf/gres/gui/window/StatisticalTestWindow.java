@@ -64,9 +64,8 @@ public class StatisticalTestWindow extends JPanel {
 
             for (String qiFile : qiFiles) {
                 Properties prop = PropertiesUtils.getFromFile(qiFile);
-
-                //TODO: Remove division by 1000
-                buffer.append(Double.parseDouble(prop.get(indicator.getKey()).toString()) / 1000);
+                
+                buffer.append(Double.parseDouble(prop.get(indicator.getKey()).toString()));
 
                 buffer.append(",");
 
