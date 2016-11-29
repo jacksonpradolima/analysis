@@ -45,6 +45,6 @@ public class AboutWindow extends DialogWindow {
 		add(Box.createVerticalStrut(10));
 		add(new JLabel("<html><b>Version</b></html>"));
 		add(Box.createVerticalStrut(10));
-		add(new JLabel("1.0.1"));
+		add(new JLabel("1.1.0"));
 	}
 }

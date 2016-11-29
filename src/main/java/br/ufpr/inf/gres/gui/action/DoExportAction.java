@@ -11,8 +11,13 @@ import javax.swing.JOptionPane;
 
 import br.ufpr.inf.gres.gui.window.MainWindow;
 import br.ufpr.inf.gres.gui.task.AsyncTask;
+import br.ufpr.inf.gres.gui.task.ExportType;
 import br.ufpr.inf.gres.gui.task.export.ExportFromFUNALLToGnuplotTask;
+import br.ufpr.inf.gres.gui.task.export.ExportFromJTableToCsvTask;
 import br.ufpr.inf.gres.gui.task.export.ExportFromJTableToLatexTableTask;
+import br.ufpr.inf.gres.gui.task.export.ExportHVFromJTableToFriedmanLatexTableTask;
+import br.ufpr.inf.gres.gui.task.export.ExportHVFromJTableToFriedmanTestTask;
+import br.ufpr.inf.gres.gui.task.export.ExportHVFromJTableToKruskalWallisTestTask;
 
 /**
  * This class is responsible for show a prompt where the user must to
@@ -38,10 +43,14 @@ public class DoExportAction extends DoAction {
 			throw new IllegalArgumentException("You must to select at least a line");
 		}
 		
-		List<String> options = new ArrayList<String>();
+		List<String> options = new ArrayList<>();
 		
-		options.add("FUNALL Files to Gnuplot");
-		options.add("Selected Rows to Latex Table");
+		options.add(ExportType.FunAllGnuPlot.toString());
+                options.add(ExportType.RowHVToFriedmanCSV.toString());
+                options.add(ExportType.RowHVToFriedmanLatex.toString());
+                options.add(ExportType.RowHVToKruskalWallisCSV.toString());
+                options.add(ExportType.RowToCSV.toString());    
+		options.add(ExportType.RowToLatex.toString());                            
 		
 		String[] names = new String[options.size()];
 			
@@ -51,7 +60,7 @@ public class DoExportAction extends DoAction {
 		
 		String selected = (String) JOptionPane.showInputDialog(parent, null, "Export", JOptionPane.QUESTION_MESSAGE, null, names, names[0]);
 
-		if (selected == null) {
+		if (selected.isEmpty()) {
 			return;
 		}
 		
@@ -65,13 +74,34 @@ public class DoExportAction extends DoAction {
 			
 			AsyncTask task = null;
 			
-			if (selected.equalsIgnoreCase(options.get(0))) {
+                        ExportType exportType = ExportType.getEnum(selected);
+                        
+                        String folderName = window.getFolder().getAbsolutePath();
+                        
+                        List<String> files = window.getResultTable().getSelectedFolderFiles();
+                        
+                        switch(exportType){
+                            case FunAllGnuPlot:
 				task = new ExportFromFUNALLToGnuplotTask(parent, folders, outputFolder);
-			} else if (selected.equalsIgnoreCase(options.get(1))) {
+                                break;
+                            case RowHVToFriedmanCSV:
+				task = new ExportHVFromJTableToFriedmanTestTask(parent, outputFolder, window.getResultTable());
+                                break;
+                            case RowHVToFriedmanLatex:
+				task = new ExportHVFromJTableToFriedmanLatexTableTask(parent, outputFolder, window.getResultTable());
+                                break;
+                            case RowHVToKruskalWallisCSV:
+				task = new ExportHVFromJTableToKruskalWallisTestTask(parent, outputFolder, window.getResultTable(), folderName, files);
+                                break;
+                            case RowToCSV:
+				task = new ExportFromJTableToCsvTask(parent, outputFolder, window.getResultTable());
+                                break;
+                            case RowToLatex:
 				task = new ExportFromJTableToLatexTableTask(parent, outputFolder, window.getResultTable());
+                                break;
 			}
 			
 			task.execute();			
 		}		
-	}
+	}                
 }
