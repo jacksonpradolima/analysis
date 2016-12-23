@@ -10,17 +10,20 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
-import jmetal.core.SolutionSet;
-
 import br.ufpr.inf.gres.core.util.LoggerUtils;
-import br.ufpr.inf.gres.core.util.SolutionSetUtils;
 
 import com.google.common.base.Preconditions;
+import org.uma.jmetal.util.archive.impl.NonDominatedSolutionListArchive;
+import org.uma.jmetal.util.fileoutput.SolutionListOutput;
+import org.uma.jmetal.util.front.Front;
+import org.uma.jmetal.util.front.imp.ArrayFront;
+import org.uma.jmetal.util.front.util.FrontUtils;
+import org.uma.jmetal.util.point.util.PointSolution;
 
 /**
  * PFKnown Generator Class
  * 
- * @author Thiago Nascimento
+ * @author Thiago Nascimento and Jackson Antonio do Prado Lima
  * @since 2015-10-27
  * @version 1.0.0
  */
@@ -53,36 +56,29 @@ public abstract class ParetoFrontGenerator extends Generator {
 		Preconditions.checkArgument(!folder.isEmpty(), "Folder cannot be empty");
 		
 		logger.info("Generating for folder: " + folder);
-		
-		SolutionSet population = new SolutionSet(Integer.MAX_VALUE);
-		
+				
+                NonDominatedSolutionListArchive<PointSolution> nonDominatedSolutionArchive = new NonDominatedSolutionListArchive<>();
+                
 		for (String file : files) {
 			updateNote(getCurrentProgress() + " from " + totalOfFiles);
 			
 			logger.info("Reading the fun file: " + file);
-
-			SolutionSet fun = SolutionSetUtils.getFromFile(file);
-
-			logger.info(fun.size() + " found solutions. Joining all solutions");
-
-			population = population.union(fun);
-
-			logger.info(population.size() + " found solutions. Removing repeated solutions");
-
-			population = SolutionSetUtils.removeRepeatedSolutions(population);
-
-			logger.info(population.size() + " found solutions. Removing dominated solutions");
-
-			population = SolutionSetUtils.removeDominatedSolutions(population);
-
-			logger.info(population.size() + " found solutions.");
-
+                        
+                        Front front = new ArrayFront(file);
+                        List<PointSolution> solutionList = FrontUtils.convertFrontToSolutionList(front);
+			
+			logger.info(solutionList.size() + " found solutions.");
+			                       
+                        for (PointSolution solution : solutionList) {                            
+                            nonDominatedSolutionArchive.add(solution);
+                        }
+                        
 			updateProgress();
 		}
 		
-		logger.info(population.size() + " found solutions. Saving the " + filename + " file");
+		logger.info(nonDominatedSolutionArchive.getSolutionList().size() + " found solutions. Saving the " + filename + " file");
 
-		population.printObjectivesToFile(folder + filename);
+                new SolutionListOutput(nonDominatedSolutionArchive.getSolutionList()).printObjectivesToFile(folder + filename);		
 	}
 	
 	protected Void doInBackground() throws Exception {
@@ -124,4 +120,3 @@ public abstract class ParetoFrontGenerator extends Generator {
 	
 	protected abstract String sortingFilesBy(String filename);
 }
-

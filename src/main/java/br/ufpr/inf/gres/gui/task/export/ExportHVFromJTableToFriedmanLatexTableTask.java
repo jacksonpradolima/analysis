@@ -12,10 +12,14 @@ import br.ufpr.inf.gres.gui.component.ResultTable;
 import br.ufpr.inf.gres.gui.task.AsyncTask;
 import br.ufpr.inf.gres.core.util.LoggerUtils;
 import br.ufpr.inf.gres.util.comparator.AlphanumComparator;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -83,7 +87,7 @@ public class ExportHVFromJTableToFriedmanLatexTableTask extends AsyncTask {
         buffer.append("\\renewcommand{\\arraystretch}{1.5}").append("\n");
         buffer.append("\\centering").append("\n");
         buffer.append("\\caption{Your caption}").append("\n");
-        buffer.append("\\label{table:your-label}").append("\n");        
+        buffer.append("\\label{table:your-label}").append("\n");
 
         String header = "";
         String defineCol = "";
@@ -100,6 +104,10 @@ public class ExportHVFromJTableToFriedmanLatexTableTask extends AsyncTask {
         buffer.append(header).append("\\\\").append("\n");
         buffer.append("\\midrule").append("\n");
 
+        DecimalFormat df = new DecimalFormat("#.###", new DecimalFormatSymbols (Locale.US));
+
+        HashMap<String, Double> list = new HashMap<>();
+
         for (int i = 0; i < instances.size(); i++) {
             String instance = instances.get(i);
             buffer.append("\\multirow{2}{*}{").append(instance).append("}");
@@ -109,16 +117,18 @@ public class ExportHVFromJTableToFriedmanLatexTableTask extends AsyncTask {
                 buffer.append(" & ");
                 Optional<TableValues> tableValue = tableValues.stream().filter(p -> p.Instance.equals(instance) && p.getDescription().equals(description)).findFirst();
 
-                if (tableValue.isPresent()) {
-                    buffer.append(tableValue.get().Hypervolume);
-                } else {
-                    buffer.append("0.0");
+                double hv_value = 0.0;
+                if (tableValue.isPresent()) {                   
+                    hv_value = Double.parseDouble(df.format(Double.parseDouble(tableValue.get().Hypervolume)));
                 }
+
+                buffer.append(hv_value);
+                list.put(instance + "_" + description, hv_value);
             }
-            
+
             buffer.append("\\\\").append("\n");
 
-            buffer.append("         ").append("\n");
+            buffer.append("         ");
 
             // Append the SD
             for (String description : descriptions) {
@@ -126,7 +136,8 @@ public class ExportHVFromJTableToFriedmanLatexTableTask extends AsyncTask {
                 Optional<TableValues> tableValue = tableValues.stream().filter(p -> p.Instance.equals(instance) && p.getDescription().equals(description)).findFirst();
 
                 if (tableValue.isPresent()) {
-                    buffer.append(tableValue.get().StandardDeviation);
+                    double aux = Double.parseDouble(tableValue.get().StandardDeviation.replace("(", " ").replace(")", " ").trim());
+                    buffer.append("(").append(df.format(aux)).append(")");
                 } else {
                     buffer.append("(0.0)");
                 }
@@ -136,7 +147,24 @@ public class ExportHVFromJTableToFriedmanLatexTableTask extends AsyncTask {
                 buffer.append("\\midrule").append("\n");
             }
         }
+        buffer.append("\\toprule").append("\n");
+        buffer.append("\\textbf{Average}");
 
+        // For each algorithm
+        for (String description : descriptions) {
+            // In each instance
+            double avg_hv = 0.0;
+            for (int i = 0; i < instances.size(); i++) {                
+                String instance = instances.get(i);
+                // I sum all values
+                avg_hv += list.get(instance + "_" + description);
+            }
+            
+            // And discovery the avg
+            buffer.append(" & ").append(df.format(avg_hv / instances.size()));
+        }
+        
+        buffer.append("\\\\").append("\n");        
         buffer.append("\\bottomrule").append("\n");
         buffer.append("\\end{tabular}").append("\n");
         buffer.append("\\end{table}").append("\n");
