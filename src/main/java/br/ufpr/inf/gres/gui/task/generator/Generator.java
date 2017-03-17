@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
-import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
@@ -12,13 +11,13 @@ import br.ufpr.inf.gres.gui.window.MainWindow;
 import br.ufpr.inf.gres.gui.window.MessageBox;
 import br.ufpr.inf.gres.gui.task.AsyncTask;
 import br.ufpr.inf.gres.core.util.FilesUtils;
-import br.ufpr.inf.gres.core.util.LoggerUtils;
 
 import com.google.common.base.Preconditions;
+import org.slf4j.LoggerFactory;
 
 public abstract class Generator extends AsyncTask {
-	
-	protected final static Logger logger = LoggerUtils.getLogger(Generator.class.getName());
+		
+        private static final org.slf4j.Logger log = LoggerFactory.getLogger(Generator.class);
 	
 	protected File[] folders;
 	

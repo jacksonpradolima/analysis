@@ -13,9 +13,13 @@ import javax.swing.JFrame;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SummaryGenerator extends Generator {
 
+    private static final Logger log = LoggerFactory.getLogger(QualityIndicatorsGenerator.class);
+    
     public SummaryGenerator(JFrame parent, File[] folders) {
         super(parent, folders);
     }
@@ -38,7 +42,7 @@ public class SummaryGenerator extends Generator {
             }
         }
 
-        logger.info(files.size() + " has been found");
+        log.info(files.size() + " has been found");
 
         updateMaximum(files.size());
 
@@ -66,7 +70,7 @@ public class SummaryGenerator extends Generator {
 
         afterFinishing();
 
-        logger.info("Done");
+        log.info("Done");
 
         return null;
     }
@@ -75,7 +79,7 @@ public class SummaryGenerator extends Generator {
         Preconditions.checkNotNull(folder, "Folder cannot be null");
         Preconditions.checkArgument(!folder.isEmpty(), "Folder cannot be empty");
 
-        logger.info("Generating for folder: " + folder);
+        log.info("Generating for folder: " + folder);
 
         List<String> indicators = new ArrayList<String>();
 
@@ -95,11 +99,11 @@ public class SummaryGenerator extends Generator {
 
             DescriptiveStatistics stats = new DescriptiveStatistics();
 
-            logger.info("Processing " + indicador + " metric");
+            log.info("Processing " + indicador + " metric");
 
             for (String file : files) {
 
-                logger.info("Reading " + file + " file");
+                log.info("Reading " + file + " file");
 
                 Properties prop = PropertiesUtils.getFromFile(file);
 

@@ -40,7 +40,7 @@ public class DoGeneratorAction extends DoAction {
 			
 			final JFileChooser fc = new JFileChooser();
 
-			fc.setCurrentDirectory(new File("."));
+			//fc.setCurrentDirectory(new File("."));
 			
 			fc.setMultiSelectionEnabled(true);
 			
@@ -50,7 +50,7 @@ public class DoGeneratorAction extends DoAction {
 
 				final File[] folders = fc.getSelectedFiles();
 
-				List<Generator> generators = new ArrayList<Generator>();
+				List<Generator> generators = new ArrayList<>();
 				
 				for (String genName : generatorNames) {
 					generators.add(GeneratorFactory.getGenerator(parent, genName, folders));

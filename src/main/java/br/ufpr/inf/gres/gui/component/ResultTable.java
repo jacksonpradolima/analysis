@@ -15,6 +15,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import br.ufpr.inf.gres.core.custom.DoubleComparator;
+import br.ufpr.inf.gres.core.indicator.EDIndicator;
 import br.ufpr.inf.gres.gui.window.MainWindow;
 import br.ufpr.inf.gres.core.indicator.EpsilonIndicator;
 import br.ufpr.inf.gres.core.indicator.GDIndicator;
@@ -29,6 +30,7 @@ import br.ufpr.inf.gres.core.util.FilesUtils;
 import br.ufpr.inf.gres.core.util.NumberUtils;
 import br.ufpr.inf.gres.core.util.OSUtils;
 import br.ufpr.inf.gres.core.util.PropertiesUtils;
+import br.ufpr.inf.gres.core.util.SettingsUtils;
 
 public class ResultTable extends JTable{
 	
@@ -43,9 +45,9 @@ public class ResultTable extends JTable{
 	public ResultTable(JFrame parent){
 		this.parent = parent;
 		
-		this.map = new HashMap<String, String>();
+		this.map = new HashMap<>();
 		
-		List<String> columnNames = new ArrayList<String>();
+		List<String> columnNames = new ArrayList<>();
 		
 		columnNames.add("#");
 		columnNames.add("Path");
@@ -59,7 +61,9 @@ public class ResultTable extends JTable{
 		columnNames.add(new InParetoFrontIndicator().getName());
 		columnNames.add(new TimeIndicator().getName());
 		columnNames.add("Solutions in PFKnown");
-		columnNames.add("PFKnown in PFApprox");
+		columnNames.add("PFKnown in PFTrue");
+                columnNames.add("Error Ratio (ER)");
+                columnNames.add("ED");
 		
 		String[] columns = columnNames.toArray(new String[columnNames.size()]);
 
@@ -67,7 +71,7 @@ public class ResultTable extends JTable{
 		
 		setAutoCreateRowSorter(true);
 		
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(getModel());
+		TableRowSorter<TableModel> sorter = new TableRowSorter<>(getModel());
 		
 		// Add custom comparator in table's columns
 		for (int i = 2; i < columnNames.size(); i++) {
@@ -132,8 +136,12 @@ public class ResultTable extends JTable{
 			
 			Properties prop = PropertiesUtils.getFromFile(file);
 			
+                        double numberOfSolutions = (pPFKnown == null) ? 0.0 : Double.parseDouble(pPFKnown.getProperty("number-of-solutions"));
+                        double inParetoFront = (pPFKnown == null) ? 0.0 : Double.parseDouble(pPFKnown.getProperty("in-pareto-front"));
+                        double errorRation = (pPFKnown == null) ? 0.0 : ((numberOfSolutions - inParetoFront) / numberOfSolutions);
+                        
 			Object[] row = new Object[] {
-				new Boolean(false),
+                                false,
 				path,
 				NumberUtils.formatNumbers(prop, new HypervolumeIndicator().getKey()),
 				NumberUtils.formatNumbers(prop, new GDIndicator().getKey()),
@@ -144,8 +152,10 @@ public class ResultTable extends JTable{
 				NumberUtils.formatNumbers(prop, new NumberOfNonRepeatedSolutionsIndicator().getKey()),
 				NumberUtils.formatNumbers(prop, new InParetoFrontIndicator().getKey()),
 				NumberUtils.formatNumbers(prop, new TimeIndicator().getKey()),
-				(pPFKnown == null) ? 0.0 : pPFKnown.getProperty("number-of-solutions"),
-				(pPFKnown == null) ? 0.0 : pPFKnown.getProperty("in-pareto-front"),	
+				numberOfSolutions,
+				inParetoFront,	
+                                NumberUtils.round(errorRation, Integer.valueOf(SettingsUtils.getDecimalPlaces())),
+                                NumberUtils.formatNumbers(prop, new EDIndicator().getKey()),
 			};
 			
 			List<String> filter = ((MainWindow) parent).getFilter();
@@ -175,17 +185,18 @@ public class ResultTable extends JTable{
 		}
 	}
 
+        @Override
 	public void clearSelection() {
 		for (int i = 0; i < getRowCount(); i++) {
-			getModel().setValueAt(new Boolean(false), i, 0);
+			getModel().setValueAt(false, i, 0);
 		}
 	}
 	
 	public List<Integer> getMarkedRows() {
-		List<Integer> selectedRows = new ArrayList<Integer>();
+		List<Integer> selectedRows = new ArrayList<>();
 
 		for (int i = 0; i < getModel().getRowCount(); i++) {
-			if (getModel().getValueAt(i, 0).equals(new Boolean(true))) {
+			if (getModel().getValueAt(i, 0).equals(true)) {
 				selectedRows.add(i);
 			}
 		}
@@ -194,13 +205,13 @@ public class ResultTable extends JTable{
 	}
 	
 	public List<String> getSelectedFolderFiles() {
-		List<String> files = new ArrayList<String>();
+		List<String> files = new ArrayList<>();
 
 		List<Integer> markedRows = getMarkedRows();
 
-		for (Integer rowId : markedRows) {
-			files.add(map.get(getModel().getValueAt(rowId, 1)));
-		}
+                markedRows.stream().forEach((Integer rowId) -> {
+                    files.add(map.get(getModel().getValueAt(rowId, 1)));
+                });
 
 		return files;
 	}

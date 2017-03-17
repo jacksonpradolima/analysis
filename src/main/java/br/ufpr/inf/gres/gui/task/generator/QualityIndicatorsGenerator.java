@@ -2,13 +2,11 @@ package br.ufpr.inf.gres.gui.task.generator;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
@@ -22,13 +20,16 @@ import jmetal.util.JMException;
 import org.apache.commons.io.FilenameUtils;
 import br.ufpr.inf.gres.core.indicator.Indicator;
 import br.ufpr.inf.gres.core.util.IndicatorUtils;
-import br.ufpr.inf.gres.core.util.LoggerUtils;
 import br.ufpr.inf.gres.core.util.PropertiesUtils;
 import br.ufpr.inf.gres.core.util.SolutionSetUtils;
+import java.util.HashSet;
+import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class QualityIndicatorsGenerator extends Generator {
 	
-	protected final static Logger logger = LoggerUtils.getLogger(QualityIndicatorsGenerator.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(QualityIndicatorsGenerator.class);
 	
 	public QualityIndicatorsGenerator(JFrame frame, File[] folders) {
 		super(frame, folders);
@@ -46,36 +47,36 @@ public class QualityIndicatorsGenerator extends Generator {
 	protected void generateFor(String startWith, int level) throws Exception{
 		List<String> files = getFilesStartingWith(folders, startWith);
 		
-		logger.info("Sorting files");
+		log.info("Sorting files");
 		
-		Map<String,List<String>> map = new HashMap<String, List<String>>();		
+		Map<String,Set<String>> map = new HashMap<>();		
 		
 		for (String filename : files) {
 
 			String key = new File(filename).getParentFile().getAbsolutePath();
 
 			if (!map.containsKey(key)) {
-				map.put(key, new ArrayList<String>());
+				map.put(key, new HashSet<>());
 			}
 
 			map.get(key).add(filename);
 		}
 		
-		logger.info("Files were sorted");
+		log.info("Files were sorted");
 
 		updateMaximum(files.size());
 		
-		for (Entry<String, List<String>> entry : map.entrySet()) {
+		for (Entry<String, Set<String>> entry : map.entrySet()) {
 			generate(entry.getKey(), entry.getValue(), files.size(), level);
 		}
 		
 		afterFinishing();
 		
-		logger.info("Done");
+		log.info("Done");
 	}
 	
-	protected void generate(String folder, List<String> files, int totalOfFiles, int level) throws Exception {
-		logger.info("Generating Quality Indicators for " + folder+". Finding a True Pareto-front file in the path");
+	protected void generate(String folder, Set<String> files, int totalOfFiles, int level) throws Exception {
+		log.info("Generating Quality Indicators for " + folder+". Finding a True Pareto-front file in the path");
 		
 		File parent = new File(folder);
 
@@ -109,7 +110,7 @@ public class QualityIndicatorsGenerator extends Generator {
 	protected void generateQualityIndicators(QualityIndicator qi, String folder, String file,SolutionSet paretoFront, int totalOfFiles) throws IOException{
 		updateNote(getCurrentProgress() + " from " + totalOfFiles);
 		
-		logger.info("Generating QI for file " + file);
+		log.info("Generating QI for file " + file);
 		
 		SolutionSet population = SolutionSetUtils.getFromFile(file);
 		

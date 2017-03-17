@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.core.util;
 
+import br.ufpr.inf.gres.core.indicator.EDIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class IndicatorUtils {
 		indicators.add(new NumberOfNonRepeatedSolutionsIndicator());
 		indicators.add(new InParetoFrontIndicator());
 		indicators.add(new TimeIndicator());
+                indicators.add(new EDIndicator());
 
 		return indicators;
 	}
