@@ -35,7 +35,8 @@
             <groupId>jmetal</groupId>
             <artifactId>jmetal</artifactId>
             <version>4.5</version>
-            <scope>compile</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jmetal4.5.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.swinglabs.swingx</groupId>
